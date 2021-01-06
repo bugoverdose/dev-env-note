@@ -1,0 +1,56 @@
+dotenv
+- 환경변수 저장하기.
+- key 숨기기. 정보 숨기기 목적.
+- localhost가 아니라 실제 application으로 배포했을 때를 위해 필요.
+----------------------------------------------------------
+개별 프로젝트 내부에서 진행
+
+0단계) [npm install dotenv]
+----
+1단계) .env 파일 생성 + .env 파일 숨기기 
+
+[.gitignore]
+node_modules
+package-lock.json
+.env 
+---- 
+2단계) .env 파일에 중요 정보를 변수로 저장.  // (.environment, .secret 등 파일명은 자유)
+- DB 주소, 비밀번호 등 중요한 정보는 .env 파일 내부에 변수로 저장
+- , ; {} 등은 사용X
+
+[.env]
+MONGO_URL="mongodb://localhost:27017/we-tube"
+PORT=4000
+----
+3단계) .env 파일의 변수 사용하기
+
+dotenv.config();
+- 자동으로 .env 파일의 모든 변수들을 가져와서 process.env.key에 저장하는 함수.
+- 최상단에서 ()로 즉시 실행시키기. 
+
+process.env : 서버, DB의 비밀번호, API 키 등 
+              서비스의 중요한 키를 저장하는 공간으로 사용 가능.
+- 시스템 환경 변수들이 담겨있는 객체.
+- 별도의 환경 변수를 임의로 저장 가능.
+
+
+[db.js] 
+import dotenv from "dotenv";
+dotenv.config(); 
+
+mongoose.connect(process.env.MONGO_URL, {
+  useNewUrlParser: true,
+  useFindAndModify: false,
+  useUnifiedTopology: true,
+});
+
+[init.js] 
+import dotenv from "dotenv";
+dotenv.config();
+
+const PORT = process.env.PORT;
+----------------------------------------------------------
+
+
+
+
