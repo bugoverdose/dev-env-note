@@ -1,0 +1,243 @@
+웹팩 : module bundler
+- 파일들을 넣으면 완전히 호환이 되는 static 파일들로 변환해줌. 
+- old JS 문법, css로 전환된 파일로 변환.
+- 사용할 모든 파일 형식들을 설정해줘야 함.
+
+> entry : 기존 파일들의 위치.
+- assets - js - main.js
+         - scss - styles.scss
+                - config - _variables.scss
+
+> output : 변환된 파일들을 생성되는 위치.
+- static - main.css
+         - main.js
+
+==============================================================
+
+1) [npm install webpack webpack-cli]   // webpack-cli : 터미널 작업 목적
+
+2) webpack.config.js 파일 생성
+=> 웹팩은 디폴트로 webpack.config.js 파일 찾으려고 함. 
+- 원칙: exported configuration object를 찾으려고 함.
+- 서버 코드와 무관. 100% client code.
+
+----------------------------
+3) assets 폴더 생성 : 우리가 작업할 위치.
+- assets/js/main.js
+- assets/scss/styles.scss
+
+----------------------------
+4) 웹팩 기본 구조
+
+[webpack.config.js]
+const path = require("path");   // import path from "path"
+
+const ENTRY_FILE = path.resolve(__dirname, "assets", "js", "main.js"); // 해당 디렉토리들에서 가져오기
+const OUTPUT_DIR = path.join(__dirname, "static");  // static이라는 폴더로 내보내기
+
+const config = {
+  entry: ENTRY_FILE,
+  output: {
+      path: OUTPUT_DIR
+      filename: "[name].[format]"
+  },
+}
+
+cf) path 모듈
+- nodejs에서 파일과 디렉토리를 '절대경로'로 만들어주는 방법
+- 특정 파일 위치에서의 상대경로가 아니라 컴퓨터/서버 자체를 기준으로 하는 절대경로
+// __dirname : 현재 디렉토리명
+// path.resolve : for a file
+// path.join : for a directory
+
+==============================================================
+
+환경변수 개념
+: WEBPACK_ENV에 값으로 development이나 production을 대입하면서 webpack 실행
+
+5) [package.json] npm 명령어 설정
+  "scripts": {
+    "dev:server": "nodemon --exec babel-node init.js --delay 2",
+    "dev:assets": "WEBPACK_ENV=development webpack",
+    "build:assets": "WEBPACK_ENV=production webpack" // 코드를 서버에 올려줄 때
+  },  
+=> 각각 다른 터미널에서 실행.
+
+--------
+
+6) process.env.WEBPACK_ENV 값을 사용
+
+[webpack.config.js]
+const MODE = process.env.WEBPACK_ENV;
+
+const config = {
+  entry: ENTRY_FILE,
+  mode: MODE,
+  output: {
+      path: OUTPUT_DIR
+      filename: "[name].[format]"
+  },
+}
+
+==============================================================
+
+[npm install --save-dev mini-css-extract-plugin]
+
+[npm install --save-dev postcss]
+
+[npm install css-loader postcss-loader sass-loader]
+
+postcss - Autoprefixer
+> -webkit- : 구글크롬, Safari 등에서 구동되도록 속성 앞에 추가된 접두사.
+> -moz- : Firefox에서 구동되도록 속성 앞에 추가된 접두사.
+
+[npm install autoprefixer]
+
+[npm install node-sass]
+
+[npm install @babel/polyfill]
+polyfill : 빈틈을 채우는 무언가
+
+등등
+==============================================================
+
+7) 기타 설정들.
+
+rules - [webpack.config.js]에 추가
+- loader : 파일을 다루는 방법 지정
+- 등등
+
+[webpack.config.js]
+const path = require("path");
+const autoprefixer = require("autoprefixer");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+
+const MODE = process.env.WEBPACK_ENV;
+const ENTRY_FILE = path.resolve(__dirname, "assets", "js", "main.js");
+const OUTPUT_DIR = path.join(__dirname, "static");
+
+const config = {
+  entry: ENTRY_FILE,
+  mode: MODE,
+  devtool: "source-map",
+  module: {
+    rules: [
+      {
+        test: /\.(scss)$/,
+        use: [
+          { loader: MiniCssExtractPlugin.loader },
+          { loader: "css-loader" },
+          {
+            loader: "postcss-loader",
+            options: {
+              postcssOptions: {
+                plugins: [
+                  [
+                    autoprefixer,
+                    {
+                      browsers: "cover 99.5%",
+                    },
+                  ],
+                ],
+              },
+            },
+          },
+          {
+            loader: "sass-loader",
+          },
+        ],
+      },
+    ],
+  },
+  output: {
+    path: OUTPUT_DIR,
+    filename: "[name].js",
+  },
+  plugins: [
+    new MiniCssExtractPlugin({
+      // Options similar to the same options in webpackOptions.output
+      // both options are optional
+      filename: "[name].css",
+    }),
+  ],
+};
+
+module.exports = config; // old export 문법
+
+------
+[package.json]
+{
+  "name": "wetube-2019",
+  "version": "1.0.0",
+  "description": "Cloning Youtube with Vanilla JS and NodeJS",
+  "author": "jeong-satchel",
+  "dependencies": {
+    "@babel/core": "^7.12.10",
+    "@babel/node": "^7.12.10",
+    "@babel/preset-env": "^7.12.11",
+    "babel-loader": "^8.2.2",
+    "body-parser": "^1.19.0",
+    "cookie-parser": "^1.4.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "helmet": "^4.3.1",
+    "mongoose": "^5.11.10",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.2",
+    "node-sass": "^4.14.1",
+    "pug": "^3.0.0"
+  },
+  "scripts": {
+    "dev:server": "nodemon --exec babel-node init.js --delay 2",
+    "dev:assets": "WEBPACK_ENV=development webpack -w",            
+       // -w : watching. assets 폴더의 파일이 변경될때마다 재실행.
+    "build:assets": "WEBPACK_ENV=production webpack"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.2.1",
+    "css-loader": "^1.0.1",
+    "eslint": "^7.17.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-config-prettier": "^7.1.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-prettier": "^3.3.1",
+    "mini-css-extract-plugin": "^1.3.3",
+    "nodemon": "^2.0.7",
+    "postcss": "^8.2.3",
+    "postcss-loader": "^4.1.0",
+    "prettier": "^2.2.1",
+    "sass-loader": "^7.1.0",
+    "webpack": "^4.44.1",
+    "webpack-cli": "^3.3.12"
+  },
+  "browserslist": [
+    "defaults"
+  ]
+}
+
+-------
+[main.pug]
+doctype html
+html
+    head
+        link(rel="stylesheet", href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU", crossorigin="anonymous")
+        title #{pageTitle} | #{siteName} 
+        link(rel="stylesheet", href="/static/main.css")
+    body
+        include ../partials/header
+        main
+            block content
+        include ../partials/footer
+        script(src="/static/main.js")
+
+-------
+[app.js]
+
+app.use(
+  helmet({
+    contentSecurityPolicy: false,
+  })
+);
+
+app.use("/static", express.static("static")); 
+// /static 라우트로 접근시, static 폴더를 보도록 지정.
