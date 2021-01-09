@@ -21,3 +21,14 @@ helmet: node.js 앱의 보안에 도움이 되는 middleware
 사용: import helmet from "helmet";
       app.use(helmet());
  
+-------------------
+Express Session - secret 옵션 : 쿠키 암호화
+- secret : 무작위 문자열. 쿠키에 들어있는 session ID를 암호화하는 기능
+
+설치: [npm install express-session]
+사용: app.js에서 passport 사용하기 전에 위치 + .env에 key 저장하고 사용. (중요)
+app.use(
+  session({
+    secret: process.env.COOKIE_SECRET,
+  })
+);
