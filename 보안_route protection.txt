@@ -1,0 +1,66 @@
+[Route Protection : 특정 route로의 출입을 제한]
+- middleware를 통해 설정.
+ex) 이미 로그인된 사용자는 /join, /login에 접근 불가능하도록 설정. 
+  => 로그아웃된 상태에서만 접근 허용(계정 생성 허용)
+ex) 로그인된 사용자만 비디오 생성 + 수정 + 삭제 route에 접근가능하도록 설정.
+
+(cf) passport와 session을 통해 req.user의 존재여부에 따라 로그인 여부 확인 가능.
+
+(tip) 시크릿창 활용하여 로그인 여부에 따른 route 접속 비교.
+
+==================================================
+
+[middlewares.js]
+
+// route protection middleware
+export const onlyPublic = (req, res, next) => {
+  if (req.user) {
+    res.redirect(routes.home); // 이미 로그인되어있으면 home으로. (req.user가 존재)
+  } else {
+    next(); // 로그인되어있지 않으면 그대로 다음으로 진행
+  }
+};
+
+export const onlyPrivate = (req, res, next) => {
+  if (req.user) {
+    next(); // 로그인되어있으면 그대로 다음으로 진행.
+  } else {
+    res.redirect(routes.home); // 로그인되어있지 않으면 home으로.
+  }
+};
+
+-----------------------
+
+[globalRouter.js]
+
+golbalRouter.get(routes.join, onlyPublic, getJoin);
+golbalRouter.post(routes.join, onlyPublic, postJoin, postLogin);
+
+golbalRouter.get(routes.login, onlyPublic, getLogin);
+golbalRouter.post(routes.login, onlyPublic, postLogin);
+
+-----------------------
+
+[userRouter.js]
+
+userRouter.get(routes.editProfile, onlyPrivate, editProfile);
+userRouter.get(routes.changePassword, onlyPrivate, changePassword);
+userRouter.get(routes.userDetail(), onlyPrivate, userDetail);
+
+-----------------------
+
+[videoRouter.js]
+
+videoRouter.get(routes.upload, onlyPrivate, getUpload);
+videoRouter.post(routes.upload, onlyPrivate, uploadVideo, postUpload);
+
+videoRouter.get(routes.videoDetail(), videoDetail);
+
+videoRouter.get(routes.editVideo(), onlyPrivate, getEditVideo);
+videoRouter.post(routes.editVideo(), onlyPrivate, postEditVideo);
+
+videoRouter.get(routes.deleteVideo(), onlyPrivate, deleteVideo);
+
+==================================================
+
+

@@ -1,0 +1,23 @@
+인증(Authentication)
+
+[local auth]
+1) username & password를 post 방식으로 전달.
+2) mongoose를 통해 비밀번호가 맞는지 체크하고 passport에게 맞다고 전달.
+3) passport는 쿠키를 생성.
+
+[github auth]
+1) 사용자는 /auth/github로 접근 => github 웹사이트로 이동하여 auth 진행.
+2) github 사이트는 인증된 사용자(깃헙 계정)의 정보를 서버로 전달. 
+   => /auth/github/callback로 이동됨.
+3) passport.js에서 githubLoginCallback 함수 호출.
+4) githubLoginCallback 함수는 profile 등 깃헙의 사용자 정보를 통해 User 모델 작업.
+   - email 정보를 기반으로 사이트의 기존 user 객체 중 동일한 email을 쓰는 객체 찾기.
+   - 새로운 user 객체 생성하기 등등
+   - 조건: return cb(error?, user?)로 끝나야 함.
+5) cb 함수 결과에 따라 passport가 반응
+  - cb(error) => user가 없다고 판단.
+  - cb(null, user) => user가 존재하므로 passport는 이 user를 기반으로 쿠키 생성
+                      => 쿠키 저장 => 브라우저로 해당 쿠키를 전달.
+ cookie = makeCookie(user);
+ savedCookie = saveCookie(cookie);
+ sendCookie(savedCookie);
