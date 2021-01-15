@@ -1,0 +1,112 @@
+[Multer를 통해 Cloud에 파일 업로드하기]
+
+1단계) 미들웨어 수정
+
+[middlewares.js]
+import multer from "multer";
+import multerS3 from "multer-s3";
+import aws from "aws-sdk";
+import routes from "./routes";
+
+const s3 = new aws.S3({
+  accessKeyId: process.env.AWS_KEY,
+  secretAcessKey: process.env.AWS_PRIVATE_KEY,
+});
+
+const multerVideo = multer({
+  storage: multerS3({
+    s3,
+    acl: "public-read", // acess control list
+    bucket: "wetube2019/video", // bucket 내부에서 파일들이 저장될 디렉토리.
+  }),
+});
+const multerAvatar = multer({
+  storage: multerS3({
+    s3,
+    acl: "public-read",
+    bucket: "wetube2019/avatar",
+  }),
+});
+
+// multer 메서드들은 수정X
+export const uploadVideo = multerVideo.single("videoFile");
+// single : 오직 하나의 파일만 업로드 가능함을 의미.
+// "videoFile" : upload.pug의 input(type="file", name="videoFile", ~)에 대응.
+
+export const uploadAvatar = multerAvatar.single("avatar");
+// [editProfile.pug] : .fileUpload의 input태그의 name="avatar"를 인자로 대입
+
+========================
+cf) Before: 개발 도중
+const multerVideo = multer({ dest: "uploads/videos/" }); // 실제로는 아마존에 저장.
+const multerAvatar = multer({ dest: "uploads/avatars/" });
+// /uploads/videos : 내 컴퓨터의 root에 videos 폴더 생성(절대경로)
+// uploads/videos  : 현재 프로젝트에 videos 폴더 생성(상대경로)
+
+========================================================================
+========================================================================
+
+2단계) Controller - 파일 경로 수정 (console.log 활용)
+- req.file.path : 우리 서버에 직접 파일을 저장할 때 저장되는 위치. 
+- req.file.location : 외부 서버에 저장할 때 저장하는 위치
+
+[videoController.js]
+export const postUpload = async (req, res) => {
+  const {
+    body: { title, description },
+    file: { location },                  // S3에서 저장되는 위치
+  } = req;
+  // console.log(req.file)
+  const newVideo = await Video.create({
+    fileUrl: location,                   // S3에서 저장되는 위치
+    title,
+    description,
+    creator: req.user.id,
+  });
+  await req.user.videos.push(newVideo.id);
+  await req.user.save();
+  res.redirect(routes.videoDetail(newVideo.id));
+};
+
+========================
+[userController.js]
+export const postEditProfile = async (req, res) => {
+  const {
+    body: { name, email },
+    file,
+  } = req; // multer로 인해 const{...}=req로 받을 수 있게 됨.
+  try {
+    await User.findByIdAndUpdate(req.user.id, {
+      name,
+      email,
+      avatarUrl: file ? file.location : req.user.avatarUrl, // S3에서 저장되는 위치 = req.file.location
+      // form에서 file을 업로드한 경우, file.location의 이미지로 프사 수정.
+      // 존재하지 않는 경우, 기존의 req.user.avatarUrl 그대로 대입. 프사 수정X.
+    });
+    res.redirect(routes.me);
+  } catch (error) {
+    res.redirect(routes.editProfile); // => getEditProfile
+  }
+};
+
+========================================================================
+========================================================================
+
+3단계) 상대경로 수정
+- 상대경로 처리했던 녀석들은 전부 파일 경로 그대로 사용하도록 수정.
+: `/${video.fileUrl}` => video.fileUrl
+
+[videoPlayer.pug]
+            video(src=video.fileUrl)
+cf) Before: video(src=`/${video.fileUrl}`)
+---------
+[videoBlock.pug] 그대로
+video.videoBlock__thumbnail(src=video.videoFile, controls=false)
+---------
+[브라우저 결과]
+<video src="https://wetube2019.s3.ap-northeast-2.amazonaws.com/video/7d2ac56d8acba2cc1a98403e0678f6e3"></video>
+
+========================
+[userDetail.pug]
+            img.u-avatar(src=user.avatarUrl)
+cf) Before: img.u-avatar(src=`/${user.avatarUrl}`)

@@ -1,0 +1,32 @@
+localtunnel
+- 개발 도중, 현재 내 사이트가 https 사이트인 것처럼 속이기 위한 도구. (테스트 목적)
+- 로컬 서버에 https 터널 생성. (http => https)
+- http://localtunnel.github.io/www/
+
+> npm install -g localtunnel
+> lt --port 4000                 // 현재 내 로컬 서버가 돌아가고 있는 port 번호 
+your url is: https://tough-turtle-93.loca.lt 
+
+==> 생성된 url로 접속하면 http://localhost:4000와 동일한 화면
+
+cf) lt --port 4000를 실행할 때마다 다른 https url 생성
+----------------------
+[package.json]
+  "scripts": {
+    "dev:server": "nodemon --exec babel-node init.js --delay 2 --ignore 'scss'",
+    "dev:assets": "WEBPACK_ENV=development webpack -w",
+    "build:assets": "WEBPACK_ENV=production webpack",
+    "tunnel": "lt --port 4000"
+  },
+
+> npm run tunnel      
+ wetube-2019@1.0.0 tunnel /home/bugod/wetube-2019
+ lt --port 4000  
+
+ your url is: https://smooth-insect-12.loca.lt
+ 
+=================================
+
+개발 완료 후에는 따로 도메인 네임을 만들고, HTTPS certificate을 지녀야 함.
+
+(주의: 더 이상 이것만으로는 페북 뚫을 수 없게 됨)

@@ -1,0 +1,61 @@
+AWS S3 : 실제 파일을 저장. 영상, 이미지 파일 등
+DB : 파일들의 주소 정보를 저장. text data.
+==============================================
+AWS S3 : 파일을 업로드할 수 있는 AWS 서비스.
+- dropbox와 같은 저장소 개념. 영상 파일 등 어떤 파일이든 저장 가능.
+- bucket : 일종의 폴더. 저장소 단위.
+- bucket을 private으로 설정하고 파일들을 드래그&드롭해서 저장소로도 사용 가능.
+(https://s3.console.aws.amazon.com/s3/home?region=us-east-2#)
+
+AWS 장점: 직접 서버에 데이터 저장하는 것보다 훨씬 비용 절감 가능.
+
+Production 단계에서는 절대 User 파일들을 서버에 직접 저장하면 안됨. 
+- 보안 측면에서 안전. 바이러스 감염 가능성.
++ 트래픽이 많아진다면 복수의 서버를 필요로 하게 될 수 있음. 
+  - 만약 동일한 파일을 각 서버에 중복으로 구성하면 고생하게 됨. + 비용.
+ 
+==============================================
+
+[npm install aws-sdk] : AWS software development kit
+[npm install multer-s3] : AWS의 S3와 연동 위해 필요.
+
+==> multer 활용하여 DB와 연동 가능.
+    - 우리 웹사이트에 업로드된 파일들 받을 수 있음.(영상, 프로필 사진 등)
+
+==============================================
+Create bucket
+- region 선택 : 주된 사용자들이 사는 지역과 최대한 가깝게?  - 서울 선택.
+- public access : 디폴트는 엑세스 완전 차단
+  - 1개만 체크. 아니면 전부 다 체크해제 (불확실)
+    - Block public and cross-account access to buckets and objects through any public bucket or access point policies
+    => Objects can be public가 되도록
+
+-----------------------
+Bucket - Access를 Public하도록 설정 변경
+- Permissions의 Access control list (ACL) > Edit
+- Everyone (public access) - write & read할 수 있도록 조정.
+      
+==============================================
+IAM - User 생성
+- Services > Securtity, Identity, & Compliance > IAM
+- Users > Add User
+
+User name : wetube
+[Programmatic access] 체크(Enables an access key ID and secret access key for the AWS API, CLI, SDK, and other development tools.)
+- to use in a programwise 
+<-> AWS Management Console access : 사람이 직접 작업
+
+Attach existing policies directly
+-> [AmazonS3FullAccess] 선택 -> Next -> Next
+: User가 Amazon S3의 모든걸 볼 수 있도록 하는 설정.
+-------------
+주의 : AWS에서는 계정 전체에 대해 모든 접근권한을 주지 않는게 좋음.
+   key를 통해 마음대로 DB, 비밀번호를 수정하는 등의 작업이 가능해질 수도 있음.
+=> wetube는 S3 접근만 허용.
+
+주의 : 계정 생성시 제공되는 key들은 딱 한번만 보여줌. 즉시 .env에 저장.
+       - Access key ID & Secret access key
+       => 비밀번호 없이 S3 계정 수정 가능. 
+
+==============================================
+
