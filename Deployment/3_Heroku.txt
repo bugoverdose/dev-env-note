@@ -1,0 +1,34 @@
+배포하기 전에 최종 단계로 서버에서 작성된 모든 코드를 old 문법으로 변환하여 배포용 폴더에 저장해야 함.
+- gulp, webpack 등 활용.
+- 더 이상 babel + nodemon 없이도 돌아가도록.
+
+1) src 폴더 만들어서 모든 코드 파일들 전부 다 넣기. 
+  - node_modules, package.json, babelrc, eslintrc, .env 등 제외
+2) build 폴더로 변환된 결과물들 정리.
+
+=================================================
+
+Heroku : git을 활용
+- 로그인
+- 내 프로젝트와 heroku 연결 => git push heroku main 
+
+> procfile : 자동으로 실행될 명령어 지정.
+  - package.json의 script 중 하나로 정의. ex) "prestart": "npm run build"
+
+> 환경변수 설정 : .env 파일은 gitignore되고 있으므로 별도로 전달해야 함.
+  - [heroku plugins:install heroku-config] 
+  - [heroku config:push] 한방에 .env 파일을 heroku로 보내주는 플러그인.
+
+=================================================
+Homepage URL - Redirection 
+: http://localhost:4000/로 접근할 경우 heroku url로 이동하도록 설정
+
+1) 깃헙 로그인의 경우 github > settings > developer settings > OAuth Apps에서 수정
+
+2) Production 단계인지 아닌지에 따라 다른 값이 대입되도록 코드 수정. 
+ex) [db.js]
+mongoose.connect(
+  process.env.PRODUCTION ? process.env.MONGO_URL_PROD : process.env.MONGO_URL,
+  {
+    useNewUrlParser: true,
+    useFindAndModify: false

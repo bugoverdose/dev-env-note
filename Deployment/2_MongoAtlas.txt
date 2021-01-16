@@ -1,0 +1,32 @@
+MongoAtlas : MongoDB의 클라우드 데이터베이스.
+
+1) cluster 생성
+- cluster는 서버. -> AWS 선택 
+  -> region : 내 서버의 위치와 가장 가까운 region 선택 (Not 개발자/사용자의 위치)
+             ex) Heroku로 미국 서버에 배포할거면 그냥 미국 N. Virginia 선택.
+ 
+2) Allow Access from Anywhere
+- 0.0.0.0/0 -> Add IP Address
+
+3) Connect : Connect to cluster
+-> Create a Database User
+  - Username : wetubeadmin
+  - password : 복잡하게 설정하고 key로 사용해도 됨
+
+4) Choose a connection method 
+-> Connect Your Application
+- Add your connection string into your application code
+: MONGO_ATLAS_URL="mongodb+srv://wetubeadmin:<password>@cluster0.4s19z.mongodb.net/<dbname>?retryWrites=true&w=majority"
+=> password & dbname만 대체하고 .env에 URL 추가
+
+참고) IP 주소를 직접 추가하면 번거로워짐. IP주소가 바뀌면 Heroku 등에 각각 다시 설정해야 하는 등.
+IP Whitelist : 해당 cluster에 접근가능한 IP주소들 설정. 보안.
+
+===================================================
+
+[db.js]
+mongoose.connect(process.env.MONGO_ATLAS_URL, {
+  useNewUrlParser: true,
+  useFindAndModify: false,
+  useUnifiedTopology: true,
+});
