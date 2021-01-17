@@ -1,0 +1,27 @@
+npm init
+npm install @babel/node @babel/core @babel/preset-env
+
+최신 JS문법을 old문법으로 변환
+
+======================================
+[.babelrc] preset 지정
+{
+  "presets": ["@babel/preset-env"]
+}
+
+======================================
+[package.json] script 지정 : src/server.js를 실행하도록 (경로는 케바케)
+{
+  ~~~
+  "scripts": {
+    "dev:server": "nodemon --exec babel-node src/server"
+  },
+  "dependencies": {
+    "@babel/core": "^7.12.10",
+    "@babel/node": "^7.12.10",
+    "@babel/preset-env": "^7.12.11",
+    "express": "^4.17.1",
+    "nodemon": "^2.0.7",
+    "socket.io": "^3.1.0"
+  }
+}

@@ -1,6 +1,6 @@
-배포하기 전에 최종 단계로 서버에서 작성된 모든 코드를 old 문법으로 변환하여 배포용 폴더에 저장해야 함.
-- gulp, webpack 등 활용.
-- 더 이상 babel + nodemon 없이도 돌아가도록.
+gulp로 코드 최종 변환
+- 배포하기 전에 최종 단계로 서버에서 작성된 모든 코드를 old 문법으로 변환하여 배포용 폴더에 저장해야 함.
+- 매번 babel과 nodemon 사용하지 않아도 그 자체로 실행되도록.
 
 1) src 폴더 만들어서 모든 코드 파일들 전부 다 넣기. 
   - node_modules, package.json, babelrc, eslintrc, .env 등 제외

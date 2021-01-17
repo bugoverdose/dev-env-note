@@ -1,0 +1,28 @@
+npm install eslint
+npm install eslint-plugin-prettier -D
+npm install eslint-config-prettier -D
+npm install prettier -D
+
+별도의 명령어(script) 없이도 세팅만 끝나면 js 파일들에 대해 문제점들 지적해줌.
+- 터미널의 PROBLEMS 탭
+
+======================================
+[.eslintrc.js] 
+module.exports = {
+  env: {
+    browser: true,
+    es6: true,
+    node: true,
+  }, // frontend & backend 모두에서 eslint 동작하도록
+  extends: ["eslint:recommended", "plugin:prettier/recommended"],
+  parserOptions: {
+    ecmaVersion: 2018,
+    sourceType: "module",
+  },
+  rules: {
+    "no-console": "off",
+  },
+};
+
+======================================
+
