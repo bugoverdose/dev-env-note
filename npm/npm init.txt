@@ -2,7 +2,7 @@ npm: node.js의 모든 패키지들이 보관되고, 다운로드할 수 있는 
 - express, electron, react 등은 모두 package의 일종.
   전부 npm(node package manager)을 통해 다운로드 가능.
 
-패키지: 즉 만들려는 웹사이트, 프레임워크 등 현재 프로잭트
+패키지: 웹사이트, 프레임워크 등 현재 프로젝트. 다른 패키지들을 기반으로 새로운 프로젝트를 제작.
 
 -------------------
 package.json

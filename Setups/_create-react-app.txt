@@ -6,6 +6,7 @@
 ================================================
 1) npx create-react-app <프로젝트명>  
 - 외부 터미널에서 실행 (주의: npm이 아님)
+- 별도로 npm init 불필요.
 ------------------------------------------
 2) git init 
 - 해당 프로젝트 내부에서 실행 (주의: git clone과 반대 순서) 
@@ -15,3 +16,7 @@
 - URL 복사
 
 4) git remote add origin <repoURL>
+
+===========================================
+> npm install prop-types
+> npm install react-router-dom

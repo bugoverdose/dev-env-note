@@ -1,0 +1,33 @@
+gh-pages branch - 깃헙 publishing
+- 조건1. static한 웹사이트
+- 조건2. public repo
+
+==============================================================
+방법1) gh-pages 브랜치에 그대로 업로드. 
+> git checkout -b gh-pages       // gh-pages라는 브랜치 생성
+> git push origin gh-pages       // gh-pages 브랜치로 현재 커밋 상태 업로드 
+> git checkout master
+
+==============================================================
+방법2) gh-pages 모듈 활용하여 세부 설정. 
+
+[create-react-app] 리액트의 경우
+> npm install gh-pages
+
+[package.json]
+- "homepage": "https://bugoverdose.github.io/{repository_name}/"
+- "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build", 
+    "deploy": "gh-pages -d build",  
+    "predeploy": "npm run build"
+  },
+
+> npm run deploy               
+1) 우선적으로 npm run predeploy를 자동 실행. (디폴트로 지정된 사항. predeploy라는 명칭 필수)
+   => "predeploy": "npm run build"를 실행.  
+   => "build": "react-scripts build" // 전부 압축 + 변환해서 build 폴더 생성.
+2) "deploy": "gh-pages -d build" : build라는 디렉토리(-d)를 gh-pages로 업로드
+
+> 수정한 내용 있을 때마다 다시 npm run deploy 실행하여 업데이트.
+
