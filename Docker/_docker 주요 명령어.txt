@@ -1,0 +1,27 @@
+[도커 주요 명령어들]
+> docker images  // 현재 다운로드된 image들 목록 출력 (== docker image list)
+
+> docker pull <이미지명:태그>
+// 이미지 pull 받기. tag를 지정하지 않는 경우 default로 :latest 적용
+// 1) 도커는 먼저 해당 이미지를 로컬에서 찾아보고, 찾을 수 없으면 
+// 2) 도커 공식 저장소에서 해당 이미지 이미지를 풀(pull) 받아옴.
+---------------
+> docker info 
+// 클라이언트에 지정된 기본 레지스트리의 주소 확인
+---------------
+> docker ps      // 현재 docker에서 실행중인 모든 컨테이너 목록 출력
+> docker ps -a   // 종료된 컨테이너들까지 확인
+
+> docker run -it <이미지이름:태그> <명령어>
+// 특정 이미지 기반의 컨테이너를 하나 실행
+// -it : shell을 실행하기 위한 옵션
+// --name 옵션 : 명시적으로 NAME 지정 가능
+// 이미지의 default 명령어 이외의 명령어를 직접 넘겨서 이미지를 컨테이너로 실행시킬 수 있음.
+
+> docker restart <CONTAINER ID>
+// exit 등으로 종료된 컨테이너 재실행
+---------------
+> docker volume create <볼륨명>    // 볼륨 생성
+> docker volume ls                 // 볼륨 목록 확인
+> docker volume rm <볼륨명>        // 볼륨 삭제
+
