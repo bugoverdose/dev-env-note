@@ -1,3 +1,3 @@
-# dev_env_notes
+# Dev Env Notes
 
-dev environment & notes
+dev environment study notes

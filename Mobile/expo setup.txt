@@ -1,0 +1,62 @@
+[Expo]
+- 핸드폰만으로 모바일 앱 시뮬레이션 가능. 
+- create-react-app의 모바일 버전.
+
+=========================================================
+1) expo init <프로젝트명>  
+- 외부 터미널에서 실행 (주의: npm이 아님)
+- 별도로 npm init, git init 불필요.
+
+1-1) Choose template
+- blank : zero에서 시작. 별도의 설정 없이 시작.
+- blank (TypeScript) : TypeScript 설정 대신 해주기.
+------------------------------------------
+2) github 사이트에서 repo 생성
+- 이미 만든 프로젝트명과 repo 이름 동일하게 하는 것을 권장.
+- URL 복사
+
+3) git remote add origin <repoURL>
+
+4) git pull origin master --allow-unrelated-histories
+
+=========================================================
+=========================================================
+사전 준비
+- [npm install -g expo-cli]  
+- Expo 앱 설치 (phone) 
+
+=========================================================
+npm start
+- Expo DevTools를 실행시킴.
+: Expo DevTools is running at http://localhost:19002
+
+---------------------------------------------------------
+Expo DevTools
+- Metro Bundler (PROCESS) : Reactive Native를 구동 가능하게 해주는 것.
+- SM-G930S (DEVICE) : 현재 연결된 삼성 스마트폰.
+
+=========================================================
+[앱 시뮬레이션]
+방법1) 핸드폰 : QR code Scan
+- Expo DevTools : Tunnel로 설정. 
+- QR code : 안드로이드 폰 > Expo > scan QR code 
+ 
+방법2) 컴퓨터 내 시뮬레이터
+- Run on Android device/emulator
+- Android Studio 설치 필요.
+
+(비교) iOS
+1) 터미널에서 expo login 실행하여 로그인 
+   핸드폰 앱 + 컴퓨터 터미널 양측에서 Expo 계정으로 로그인해야 앱 시뮬레이션 가능.
+2) Run on iOS simulator (윈도우에서는 불가능)
+ 
+=========================================================
+Expo 개발자 메뉴
+: 핸드폰 흔들기 (시뮬레이터 ctrl + D)
+
+> 새로고침
+> Show Performance Monitor
+> Debug Remote js - 앱 디버그 과정 도와주는 크롬 탭 생성. console 창 확인.
+                  - 일시적으로 앱 성능 저하. 느려짐.
+  
+=========================================================
