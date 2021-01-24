@@ -1,0 +1,19 @@
+pre 접두사
+: npm start 실행시, npm prestart를 자동으로 실행시킨 후 start의 명령어 실행됨.
+
+[package.json]
+  "scripts": {
+    "start": "node index.js",
+    "prestart": "tsc"           
+  },
+
+> tsc               // tsconfig.json 파일을 기준으로 컴파일 진행.
+> node index.js     // node.js에서 index.js 파일 실행
+
+========================================================================
+함수 적용: --onSuccess
+
+[package.json]
+  "scripts": {
+    "start": "tsc-watch --onSuccess \" node dist/index.js\" "
+  },

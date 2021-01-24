@@ -1,0 +1,41 @@
+npm install @babel/cli -g
+: global로 설치해놓으면 프로젝트별로 매번 새로 설치할 필요가 없어짐.
+
+===============================================================
+npm init
+
+npm install @babel/node @babel/core @babel/preset-env
+
+최신 JS문법을 old문법으로 변환
+
+======================================
+[.babelrc] 
+{
+  "presets": ["@babel/preset-env"]
+}
+
+: @babel/preset-env는 현재 파일들의 코드가 괜찮은지, 아니면 컴파일되어야 하는지 판단해주는 기능
+
+======================================
+[package.json] 
+{
+  ~~~
+  "scripts": {
+    "dev:server": "nodemon --exec babel-node src/server"
+  },
+  "dependencies": {
+    "@babel/core": "^7.12.10",
+    "@babel/node": "^7.12.10",
+    "@babel/preset-env": "^7.12.11",
+    "express": "^4.17.1",
+    "nodemon": "^2.0.7",
+    "socket.io": "^3.1.0"
+  }
+}
+
+// script 지정 : 실행할 파일의 경로를 구체적으로 지정.
+======================================
+1) "dev:server": "node server"                // node에서 server.js 실행 
+2) "dev:server": "nodemon --exec node server" // nodemon으로 node에서 server.js 실행
+3) "dev:server": "nodemon --exec babel-node server"   
+                                 // nodemon으로, babel-node 방식으로 server.js 실행

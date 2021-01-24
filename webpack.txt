@@ -13,7 +13,6 @@
          - main.js
 
 ==============================================================
-
 1) [npm install webpack webpack-cli]   // webpack-cli : 터미널 작업 목적
 
 2) webpack.config.js 파일 생성
