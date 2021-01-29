@@ -1,0 +1,43 @@
+파이어베이스 - 로그인 - 콘솔 (https://console.firebase.google.com/)
+
+1) Create Project : <프로젝트명> 
+   - analytics는 나중에 추가 가능.
+2) 앱을 추가하여 시작하기 : </> 웹.  
+   - Firebase Hosting은 나중에 추가 가능.
+
+프로젝트에 파이어베이스 연결 방법들(https://firebase.google.com/docs/reference/js/?authuser=0)
+- Firebase SDK 코드를 html 파일에 붙여넣기.
+- npm package 활용 : https://www.npmjs.com/package/firebase
+
+cf) SDK(소프트웨어 개발 키트, Software Development Kit)
+==============================================================================
+React 셋업
+1) npx create-react-app <프로젝트명>  
+2) git init 
+3) github 사이트에서 repo 생성
+4) git remote add origin <repoURL>
+
+==============================================================================
+프로젝트에 파이어베이스 연결
+1) npm install --save firebase
+2) src/firebase.js 파일 생성 후 firebaseConfig & Initialize 코드 복붙
+
+[firebase.js]
+import firebase from "firebase/app";
+const firebaseConfig = {
+  apiKey: "~~"
+  authDomain: "~~", // .env 파일에 저장하기.
+  ~~
+};
+export default firebase.initializeApp(firebaseConfig);
+
+[index.js]
+import firebase from "./firebase";
+
+==============================================================================
+주의: Firebase config 코드를 환경변수로 설정하는 경우 npm build 과정에서 활용됨. 
+- Firebase 측면에는 key들이 전부 노출됨. 사용자들은 모두 알 수 있음.
+- 단지 깃헙에는 올라가지 않게 됨.
+=> 보안 측면에서 추가적인 작업 필요.
+
+==============================================================================

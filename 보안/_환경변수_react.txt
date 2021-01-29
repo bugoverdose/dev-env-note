@@ -1,0 +1,8 @@
+create-react-app 프로젝트의 경우.
+
+1) dotenv 셋업 불필요. 
+- 별도의 import 및 함수 실행 없이 곧바로 process.env에 접근 가능
+
+2) 형식: REACT_APP_VARIABLE_NAME 
+- 환경변수들은 무조건 REACT_APP_로 시작해야 함.
+ 

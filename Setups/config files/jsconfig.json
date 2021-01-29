@@ -1,0 +1,7 @@
+// src 폴더를 기준으로 Absolute import 사용 설정.
+{
+  "compilerOptions": {
+    "baseUrl": "src"
+  },
+  "include": ["src"]
+}

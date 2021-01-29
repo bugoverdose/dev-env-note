@@ -1,7 +1,8 @@
 npm install typescript -g
+cf) npm link typescript       
+    : tsc-watch 관련 에러 해결용.
 ========================================================
-1) npm link typescript       
-- tsc-watch 등 다양한 에러 예방.
+1) npm install typescript
 
 ========================================================
 2) npm install tsc-watch --dev
