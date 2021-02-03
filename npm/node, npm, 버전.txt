@@ -25,13 +25,13 @@ nvm : node version manager
 
 [nvm uninstall 삭제하려는 과거 버전]
 - nvm uninstall v12.19.0
-------------------------
 
+------------------------
 [nvm alias default 버전] : default node version 설정 방법
 nvm install 14.15.3
 nvm alias default 14.15.3
 
-------------------------
+====================================================
 <npm 버전 업데이트> 
 npm install -g npm
 npm -v  

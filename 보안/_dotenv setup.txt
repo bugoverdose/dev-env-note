@@ -1,6 +1,7 @@
 dotenv
 - 환경변수 저장하기.
 - key 숨기기. 정보 숨기기 목적.
+  : To be able to hide strings from the version control systems
 - localhost가 아니라 실제 application으로 배포했을 때를 위해 필요.
 ----------------------------------------------------------
 개별 프로젝트 내부에서 진행

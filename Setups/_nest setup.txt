@@ -1,0 +1,12 @@
+> npm install -g @nestjs/cli
+> nest
+
+1) nest new     // nest 프로젝트 생성 명령어 (외부 터미널에서 실행)
+- 프로젝트명
+- npm
+------------------------------------------
+2) github 사이트에서 repo 생성
+
+3) git remote add origin <repoURL>   // npm init & git init 불필요
+
+===========================================
