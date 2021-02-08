@@ -7,7 +7,13 @@
 1) npx create-react-app <프로젝트명>  
 - 외부 터미널에서 실행 (주의: npm이 아님)
 - 별도로 npm init 불필요.
-------------------------------------------
+
+1-1) README.md 수정, App.js & index.js 파일 이외는 제거 등.
+- src/components/App.js - Router, Route 설정
+- src/routes 등
+- public/reset.css => index.html에서 최상단에 직접 적용.
+
+------------------------------------------------
 2) git init 
 - 해당 프로젝트 내부에서 실행 (주의: git clone과 반대 순서) 
 
@@ -17,6 +23,31 @@
 
 4) git remote add origin <repoURL>
 
-===========================================
+================================================
 > npm install prop-types
 > npm install react-router-dom
+> npm install styled-components 
+
+================================================
+[src/components/App.js]
+import React from "react";
+import { BrowserRouter as Router, Route } from "react-router-dom";
+import Detail from "../routes/Detail";
+import Home from "../routes/Home";
+
+const App = () => {
+  return (
+    <Router>
+      <Route exact path="/" component={Home} />
+      <Route path="/:id" component={Detail} />
+    </Router>
+  );
+};
+
+export default App;
+
+================================================
+[public/index.html]
+<link rel="stylesheet" href="%PUBLIC_URL%/reset.css" />
+
+================================================

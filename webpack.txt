@@ -12,6 +12,19 @@
 - static - main.css
          - main.js
 
+Quiz
+- What is Webpack? : A module bundler
+- What is the difference between the packages 'webpack' and 'webpack-cli'? : 'webpack' is the package we use in a file and 'webpack-cli' is a package we use in the console
+- How many scripts can I have inside my "scripts" in package.json? : As many as I want
+- What is the default file that webpack looks for when we call it? : webpack.config.js
+- "path" is an utility installed by default with NodeJS : True
+- What is the difference between "entry" and "output" in Webpack : "entry" is a path to the root file of our app and "output" is a path to the directory where all the transformed assets should go.
+- What is the function of the "modules" object in Webpack : It allows us to specify different transformations for different file formats.
+- How do we teach webpack how to transform the files? : Using loaders
+- Where do we write all the transform instructions for webpack? : In the 'rules' array inside of the 'modules' object
+- How many loaders can we have inside of one rule : Min. 1, Max Infinite
+- How are loaders used in webpack : From last to first
+
 ==============================================================
 1) [npm install webpack webpack-cli]   // webpack-cli : 터미널 작업 목적
 

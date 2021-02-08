@@ -1,12 +1,69 @@
+[Nest setup]
 > npm install -g @nestjs/cli
 > nest
 
 1) nest new     // nest 프로젝트 생성 명령어 (외부 터미널에서 실행)
 - 프로젝트명
 - npm
-------------------------------------------
+-------------------------------------------------------------
 2) github 사이트에서 repo 생성
 
-3) git remote add origin <repoURL>   // npm init & git init 불필요
+3) git remote add origin <repoURL>   
+// npm init & git init 불필요
 
-===========================================
+=============================================================
+=============================================================
+[Nest.js 방식의 Apollo server 셋업]
+
+1) npm i @nestjs/graphql graphql-tools graphql apollo-server-express
+// apollo-server-express 위에서 동작.
+
+2) GraphQLModule 설정
+- schema.gql 별도로 생성 불필요. 자동으로 생성됨.
+  - autoSchemaFile: true, // schema.gql 파일을 메모리에 생성 + 저장.
+  - autoSchemaFile: join(process.cwd(), 'src/schema.gql'), // schema.gql 파일을 src 폴더에 직접 저장
+
+[app.module.ts]
+@Module({
+  imports: [
+    GraphQLModule.forRoot({  // forRoot: GraphQLModule을 root모듈로 configure.
+      autoSchemaFile: true,  // schema.gql 파일을 메모리에 생성 + 저장.
+      // Code first 접근: queries & resolvers를 기준으로 자동으로 스키마 생성. (TS의 힘)
+    }),
+    RestaurantsModule,
+  ],
+  controllers: [],
+  providers: [],
+})
+export class AppModule {}
+
+-------------------------------------------------------------
+3) nest g mo restaurants
+- @Resolver & @Query 데코레이터 활용
+
+[restaurants/restaurants.resolver.ts]
+import { Query, Resolver } from '@nestjs/graphql'; 
+
+@Resolver()
+export class RestaurantResolver {
+  @Query(() => Boolean) // GraphQL용 타입. 필수.
+  randomFunc(): boolean { // TS용 타입. 선택.
+    return true;
+  }
+}
+
+-------------------------------------------------------------
+[restaurants/restaurants.module.ts]
+import { Module } from '@nestjs/common';
+import { RestaurantResolver } from './restaurants.resolver';
+
+@Module({
+  providers: [RestaurantResolver], // GraphQL : providers에 resolver 주입
+})
+export class RestaurantsModule {}
+
+=============================================================
+=============================================================
+>  npm run start:dev
+- http://localhost:3000
+- http://localhost:3000/graphql
