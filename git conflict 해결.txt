@@ -1,0 +1,6 @@
+바로 직전 pull에서 conflict 발생한 경우
+
+git merge --abort // merge 취소.
+충돌 해결 
+git pull origin main // 다시 pull 받기.
+

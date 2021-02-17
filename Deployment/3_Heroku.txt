@@ -1,4 +1,5 @@
-gulp로 코드 최종 변환
+[사전준비]
+build: 웹팩/gulp로 코드 최종 변환
 - 배포하기 전에 최종 단계로 서버에서 작성된 모든 코드를 old 문법으로 변환하여 배포용 폴더에 저장해야 함.
 - 매번 babel과 nodemon 사용하지 않아도 그 자체로 실행되도록.
 
@@ -6,29 +7,107 @@ gulp로 코드 최종 변환
   - node_modules, package.json, babelrc, eslintrc, .env 등 제외
 2) build 폴더로 변환된 결과물들 정리.
 
-=================================================
+==================================================================
+Heroku 셋업
+> curl https://cli-assets.heroku.com/install.sh | sh 
+// WSL2 외부 터미널에서 실행 => /usr/local/bin/heroku에 저장됨.
 
-Heroku : git을 활용
-- 로그인
-- 내 프로젝트와 heroku 연결 => git push heroku main 
+==================================================================
+==================================================================
+Heroku
+1) [heroku autocomplete]  
+// 프로젝트 내부 터미널에서 실행 => Heroku에 로그인됨.
 
-> procfile : 자동으로 실행될 명령어 지정.
-  - package.json의 script 중 하나로 정의. ex) "prestart": "npm run build"
+==================================================================
+2) [heroku create]
+// 로그인된 상태로 heroku에 app 생성
+// 생성되는 2가지 주소 중 ~.git 쪽으로 git branch 자동생성. 
+// git remote -v으로 확인 가능;
+// ~herokuapp.com를 통해 웹사이트 접근 가능. 실제 웹사이트 주소.
+ 
+==================================================================
+3) "prestart": "npm run build", // package.json에 script로 추가
+// Procfile: 앱을 실행하기 위해 자동으로 실행될 명령어.
+// heroku 측에서도 build 작업 자동진행해주도록 명령어 설정.
 
-> 환경변수 설정 : .env 파일은 gitignore되고 있으므로 별도로 전달해야 함.
-  - [heroku plugins:install heroku-config] 
-  - [heroku config:push] 한방에 .env 파일을 heroku로 보내주는 플러그인.
+3-1) "start": "PRODUCTION=true node build/init.js",
+// package.json에서 PRODUCTION=true 대입하여 실행하도록 내용 추가.
+// PRODUCTION 여부에 따라 mongoose, passport 등 다른 경로 선택하도록 사전 준비 필요.
 
-=================================================
-Homepage URL - Redirection 
-: http://localhost:4000/로 접근할 경우 heroku url로 이동하도록 설정
+3-2) Package.json에서 "devDependencies" 패키지들을 "Dependencies"로 이동.
 
-1) 깃헙 로그인의 경우 github > settings > developer settings > OAuth Apps에서 수정
+==================================================================
+4) [heroku plugins:install heroku-config] 
+// .env 파일의 모든 환경변수들을 heroku로 보내주는 플러그인. 
+// 헤로쿠 앱에 직접 플러그인 설치 필요. 즉, 프로젝트 터미널에 설치.
+// .env 파일의 환경변수들은 gitignore되고 있으므로 별도로 전달해줘야 함.
 
-2) Production 단계인지 아닌지에 따라 다른 값이 대입되도록 코드 수정. 
-ex) [db.js]
+==================================================================
+==================================================================
+5) 개발환경에서 사용된 localhost 주소들 전부 수정 필요. (passport 등)
+
+웹사이트들 설정 변경: heroku url을 홈페이지로 설정
+- Homepage URL - Redirection : http://localhost:4000/로 접근할 경우 heroku url로 이동하도록 설정
+
+1단계) 깃헙 로그인의 경우 github > settings > developer settings > OAuth Apps에서 수정
+   - Homepage URL에 heroku url 대입.
+   - Authorization callback URL의 앞부분에도 heroku url 대입.
+2단계) Production 단계인지 아닌지에 따라 다른 값이 대입되도록 코드 수정.
+// 사전에 package.json에서 PRODUCTION=true 대입하여 start 실행하도록 내용 추가. 
+
+[db.js] 
 mongoose.connect(
   process.env.PRODUCTION ? process.env.MONGO_URL_PROD : process.env.MONGO_URL,
   {
     useNewUrlParser: true,
     useFindAndModify: false
+
+[passport.js]
+passport.use(
+  new GithubStrategy(
+    {
+      // ~~
+      callbackURL: `${
+          process.env.PRODUCTION
+          ? process.env.DEPLOYMENT_APP_URL
+          : "http://localhost:4000"
+      }${routes.githubCallback}`,
+    },
+    githubLoginCallBack
+  )
+);
+==================================================================
+6) [heroku config:push] // 해당 플러그인 실행.
+// [heroku config] // 헤로쿠로 전달된 환경변수들 확인 가능.
+// 전달하고 나면 해당 플러그인으로 다시 수정 불가.
+
+heroku config:set 환경변수 // 개별 환경변수 전달 방법. 개별 수정 방법.
+// heroku config:set ABC="asddfgfgh" // 기본형식. 
+==================================================================
+==================================================================
+7) [git push heroku master]
+// 최종 커밋된 상태로 heroku 주소로 push: 내 프로젝트와 heroku 연결
+// 자동으로 package.json을 참고하여 필요한 모듈들 전부 다운로드하여 build 진행.
+
+cf) [heroku logs --tail] // 에러 메시지 확인 목적.
+cf) 주의: Heroku에서 환경변수 PORT에 포트 대입해줌 => app.listen(PORT) 필수.
+
+==================================================================
+8) heroku에 다시 배포하려면 heroku repo 삭제 + local git repo도 재생성 필요.
+
+// [git add .]  [git commit -m "~~"] // 간단한 코드 수정의 경우.
+// [git push heroku master --force] // 강제 덮어쓰기 가능. => 더 합리적임.
+
+> heroku plugins:install heroku-repo
+> heroku repo:reset
+
+// re-initialise your local git repo by deleting and recreating it:
+> rm -rf .git 
+> git init
+> git remote add origin <깃헙리포주소>
+> heroku git:remote -a <appname>
+
+cf) 나중에 https://dashboard.heroku.com/apps 웹사이트에서도 앱 삭제 필요.
+
+==================================================================
+==================================================================
