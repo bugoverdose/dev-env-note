@@ -28,8 +28,8 @@ nvm : node version manager
 
 ------------------------
 [nvm alias default 버전] : default node version 설정 방법
-nvm install 14.15.3
-nvm alias default 14.15.3
+nvm install 14.16.0
+nvm alias default 14.16.0
 
 ====================================================
 <npm 버전 업데이트> 

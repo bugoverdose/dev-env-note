@@ -18,9 +18,11 @@ E2E: 라우트+요청 방법별 테스트(controller). GraphQL Resolver별 테�
 : TypeOrm SQL 코드로 DB와 상호작용. 별도의 DB 테이블들을 사용하여 데이터 실제로 생성. 
   - pgAdmin4에서 사용할 데이터베이스 별도로 생성하고 환경변수 변경하여 연결.
 : 최종적인 실행 결과. End-to-End 테스트. Integration Test라고도 불림. 
+: resolver & TypeORM & Service 메서드 모두 제대로 동작하는지 동시에 확인 가능.
 - beforeAll로 하나의 테스트 모듈 만들어서 진행. 
   - UsersModule을 테스트할 때 AppModule 전체를 import하여 테스트 모듈 사용. 
   - .env.test의 환경변수 활용하여 AppModule 생성
+  - 테스트 종료시 DB 제거 + 테스트 모듈도 제거 필요.
 - test/~.e2e-spec.ts 
 - npm run test:e2e         // 실행시 jest에서 자체적으로 NODE_ENV=test 대입.
 - jest-e2e.json 셋업 필요. 
@@ -50,7 +52,7 @@ app.e2e-spec.ts // nest 프로젝트 생성시 자동 셋업됨.
     "collectCoverageFrom": [
       "**/*.service.(t|j)s"    // service.ts 파일들만 테스트 대상으로 지정. (test coverage 관련)
     ],
-     "coveragePathIgnorePatterns": [
+    "coveragePathIgnorePatterns": [
       "restaurants"           // restaurants 폴더는 제외.
     ],
     "coverageDirectory": "../coverage",
