@@ -1,0 +1,12 @@
+1) repo의 브랜치들 확인
+- To see local branches, run this command: git branch.
+- To see remote branches, run this command: git branch -r.
+- To see all local and remote branches, run this command: git branch -a.
+참고) q로 나가기 가능.
+
+==============================================================
+2) 원격 브랜치 삭제
+git push origin --delete 브랜치명  // 방법1
+
+git branch -d 브랜치명    // 방법2
+git push origin 브랜치명

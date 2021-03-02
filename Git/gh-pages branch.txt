@@ -8,6 +8,22 @@ gh-pages branch - 깃헙 publishing
 > git push origin gh-pages       // gh-pages 브랜치로 현재 커밋 상태 업로드 
 > git checkout master
 
+========================================================
+업데이트: master 브랜치 커밋과 일치시키기. 
+git checkout gh-pages // 방법1
+git merge master
+git push origin gh-pages   
+==================================
+$ git add .           // 방법2
+$ git status // to see what changes are going to be commited
+$ git commit -m 'Some descriptive commit message'
+$ git push origin master
+
+$ git checkout gh-pages // go to the gh-pages branch
+$ git rebase master // bring gh-pages up to date with master
+$ git push origin gh-pages // commit the changes
+$ git checkout master // return to the master branch
+
 ==============================================================
 방법2) gh-pages 모듈 활용하여 세부 설정. 
 

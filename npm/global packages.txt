@@ -8,4 +8,4 @@ npm install typescript -g
 npm install localtunnel -g 
 npm install expo-cli -g 
 npm install graphql-playground -g 
- 
+npm install -g @nestjs/cli
