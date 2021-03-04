@@ -1,0 +1,35 @@
+NODE_ENV
+1단계) package.json - script에서 npm run start & npm run start:dev 실행시, 
+       별도로 cross-env NODE_ENV=prod & cross-env NODE_ENV=dev 추가.
+2단계) ConfigModule.forRoot에서 process.env.NODE_ENV의 값에 따라 다른 값 대입되도록 설정.
+
+- Jest에서 기본적으로 NODE_ENV=test를 디폴트 값으로 자동 설정.
+- package.json - script에서 npm run test:e2e 진행시 별도로 NODE_ENV=test 대입 불필요.
+
+https://jestjs.io/docs/en/environment-variables
+
+// =====================================================================
+// [package.json]
+  "scripts": {
+    "start": "cross-env NODE_ENV=prod nest start",
+    "start:dev": "cross-env NODE_ENV=dev nest start --watch",
+    "test:watch": "jest --watch",
+    "test:cov": "jest --coverage", 
+    "test:e2e": "jest --config ./test/jest-e2e.json"
+  },
+
+// [app.module.ts]
+@Module({
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true, // app 어디서든 config 모듈에 접근 가능. => import 불필요.
+      envFilePath: process.env.NODE_ENV === 'dev' ? '.env.dev' : '.env.test', // boolean
+      // process.env.NODE_ENV은 환경변수들의 경로. 변수명 NODE_ENV은 package.json의 명령어에 대응되도록.
+      // NODE_ENV=dev로 실행했으면 참이므로 .env.dev 사용. 그 외의 경우 거짓이므로 .env.test 사용.
+      ignoreEnvFile: process.env.NODE_ENV === 'prod', // 참이면 ConfigModule은 환경변수 파일 무시. 다른 방법으로 환경변수들 얻게 됨.
+      // NODE_ENV=prod로 실행했을 때만 ignoreEnvFile 옵션이 참이 되도록.
+      validationSchema: Joi.object({
+        NODE_ENV: Joi.string().valid('dev', 'prod', 'test').required(), 
+        // NODE_ENV의 값은 dev, prod, test만 가능하도록 지정. jest 자체 디폴트 값은 NODE_ENV=test
+
+// =====================================================================

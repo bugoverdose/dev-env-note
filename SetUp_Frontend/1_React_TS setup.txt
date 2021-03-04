@@ -1,0 +1,15 @@
+[React - TS 템플릿 셋업]
+1) npx create-react-app 프로젝트명 --template=typescript   // 외부 터미널에서 실행
+
+2) git remote add origin 깃헙repo주소
+// npm init & git init 불필요
+
+npm run start
+ 
+=====================================================================
+참고) 주요 패키지들 
+> npm install react-router-dom // https://reactrouter.com/web/guides/quick-start
+> npm install prop-types 
+> npm install styled-components 
+
+=====================================================================

@@ -1,0 +1,24 @@
+[Nest setup]
+0) npm install -g @nestjs/cli
+- nest          // 주요 명령어 확인 가능능
+
+1) nest new     // nest 프로젝트 생성 명령어 (외부 터미널에서 실행)
+- 프로젝트명
+- npm
+
+2) git remote add origin <repoURL>   
+// npm init & git init 불필요
+
+===============================================================
+3) nest g mo podcast
+
+[app.module.ts]
+@Module({
+  imports: [PodcastModule], // 앱에서 사용할 모든 모듈들의 배열. 
+                            // ConfigModule, TypeOrmModule, GraphQLModule 등도 전부 포함.
+  controllers: [AppController],
+  providers: [AppService],
+})
+export class AppModule {}
+
+===============================================================

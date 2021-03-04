@@ -1,0 +1,118 @@
+[Apollo Server 셋업]
+
+1) npm i @nestjs/graphql graphql-tools graphql apollo-server-express
+// apollo-server-express 위에서 동작.
+
+===============================================================
+1-1) npm i class-validator
+// ArgsType Validation : dto에서 특정한 데이터들만 전달되도록 유효성 검사 목적.
+
+[main.ts] ValidationPipe 설정 => ArgsType Validation 가능하도록 설정. 
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+  app.useGlobalPipes(new ValidationPipe()); 
+  await app.listen(3000);
+}
+bootstrap();
+
+===============================================================
+2) GraphQLModule 셋업 : AppModule에 root모듈로 configure. (forRoot)
+- { autoSchemaFile: true } 옵션 : schema.gql 파일을 메모리에 생성 + 저장.
+
+[app.module.ts]
+@Module({
+  imports: [
+    GraphQLModule.forRoot({ autoSchemaFile: true }),
+    PodcastModule, 
+  ],
+  controllers: [AppController],
+  providers: [AppService],
+})
+export class AppModule {}
+ 
+cf) Code first 접근: queries & resolvers 등을 기준으로 자동으로 스키마 생성. TS.
+                   : schema.gql 파일을 직접 생성 불필요. 
+- { autoSchemaFile: join(process.cwd(), 'src/schema.gql') } 옵션 // 생성된 schema.gql 파일을 src 폴더에 직접 저장하고 싶은 경우 적용.
+
+===============================================================
+3) 모듈, resover, service 생성하여 연결. (Dependency Injection)
+nest g mo podcast
+nest g r podcast
+nest g s podcast
+===================================
+[podcast.module.ts] 
+@Module({ 
+  providers: [PodcastService, PodcastResolver],  
+})
+export class PodcastModule {}
+===================================
+[podcast.resolver.ts] 
+@Resolver((of) => Podcast)
+export class PodcastResolver {
+  constructor(private readonly podcastService: PodcastService) {}
+
+  @Query((returns) => String)
+  helloWorld(): string {
+    return this.podcastService.helloWorld();
+  }
+}
+===================================
+[podcast.service.ts]
+@Injectable()
+export class PodcastService {
+  helloWorld(): string {
+    return "Hello World!";
+  }
+}
+
+=============================================================
+4) GraphQL Entity & DTO 생성.
+- ArgsType Validation : Entity 생성할 때 class-validator 적용 가능.
+- 엔티티 간 1대다 관계 등 적용시 @InputType에 타입명 지정 필요.
+- @Field((type) => Int) : 해당 필드가 반환할 타입 지정.
+
+[podcast.entity.ts]
+import { IsNumber, IsString } from 'class-validator';
+
+@InputType('PodcastInputType', { isAbstract: true }) // MappedTypes를 통해 해당 GraphQL 엔티티로 dto 생성하기 위해 필요. isAbstract:  GraphQL 스키마에서 @InputType의 엔티티 생성 방지.
+@ObjectType() // GraphQL 스키마에 @ObjectType만 생성
+export class Podcast {
+  @Field((type) => Int)
+  @IsNumber()
+  readonly id: number;
+
+  @Field((type) => String) // GraphQL
+  @IsString()
+  readonly title: string;
+}
+
+===================================
+[create-podcast.dto.ts] 각 query/mutation마다 한쌍씩 정의하여 사용.
+import { InputType, ObjectType, PickType } from '@nestjs/graphql'; 
+
+@InputType() // MappedTypes로 dto 생성 가능. Entity쪽에도 필요.
+export class CreatePodcastInputDto extends PickType(Podcast, [
+  'title', 
+]) {}
+
+@ObjectType() // 다른 DTO를 상속하여 DTO를 생성하려는 경우 양쪽에 필요
+export class CreatePodcastOutputDto extends CoreOutputDto {}
+
+===================================
+[output.dto.ts]
+import { Field, ObjectType } from '@nestjs/graphql';
+
+@ObjectType() // 다른 DTO를 상속하여 DTO를 생성하려는 경우 양쪽에 필요
+export class CoreOutputDto {
+  @Field((type) => Boolean)
+  ok: boolean;
+
+  @Field((type) => String, { nullable: true })
+  error?: string;
+}
+
+=============================================================
+>  npm run start:dev
+- http://localhost:3000/graphql     // Playground 확인 가능.
+
+=============================================================

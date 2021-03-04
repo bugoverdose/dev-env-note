@@ -1,0 +1,35 @@
+Nest에서 DB와 상호작용하기 위해 TypeORM, Sequelize 등의 ORM 패키지 활용 가능.
+- TypeORM, Sequelize 모두 비슷한 수준의 인기.
+- TypeORM은 그 자체로 TypeScript 기반. 더 TS 친화적. 멀티플랫폼.
+- Sequelize는 node.js에서만 돌아간다는 점에서 제약. 기본적으로 JS 기반.
+- mongoDB를 쓰려면 nest에서도 mongoose도 활용 가능.
+
+==========================================================================
+TypeORM : TS/Nest.js에서 DB와 쉽게 통신하는 방법
+- 직접 SQL문을 작성하여 DB로 보내는 대신 TS 코드를 통해 DB와 상호작용 가능.
+- TypeORM 사용시 TS/Nest의 기능들을 그대로 활용 가능해짐 => DB 테스팅도 가능.
+- NodeJS 외에도 Browser 등 다양한 환경에서 활용 가능 => 프론트엔드에서 DB와 소통 가능하게 해줌.
+- 다양한 종류의 DB들을 지원해줌: mysql, sqlite, postgres, mongodb 등
+
+ORM : Object Relational Mapper 객체 관계 매핑
+    : TS 코드, 파이썬 코드 등을 통해 DB와 상호작용 가능하게 해주는 도구들.
+
+==========================================================================
+Data Mapper vs Active Record
+- DB와 상호작용할 때 사용하는 패턴들
+- Django, Ruby On Rails 등에서 Active Record를 사용함. 더 인간적인 방식으로 보임.
+- NestJS에서는 두 가지 방법 모두 사용 가능. 수업에서는 Data Mapper만 사용할 것.
+
+Active Record : @Entity가 꾸미는 클래스가 BaseEntity를 상속하도록 설정. Repository 불필요.
+              : export class RestaurantEntity extends BaseEntity { ~ }
+              : find, findOne, findByName 등의 메서드들 직접 활용 가능.
+- 소규모 앱에서 간단하게 활용 가능.
+
+Data Mapper : @Entity가 꾸미는 클래스를 Repository 형식으로 Service에 주입.
+            : export class RestaurantEntity { ~ } 
+            : Repository를 통해 메서드들 활용 가능.
+- 유지보수에 더 용이. 대규모 앱에 더 유용함.
+- Nest에서 Repository가 더 활용성이 높음. 테스팅에 활용 가능.
+- Nest는 자체적으로 Repository를 클래스들에 inject할 수 있도록 해줌.
+
+==========================================================================

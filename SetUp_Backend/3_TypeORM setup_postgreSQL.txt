@@ -1,0 +1,96 @@
+[TypeORM 셋업 - postgreSQL]
+
+1) npm install --save @nestjs/typeorm typeorm pg
+
+==========================================================================
+2) TypeORM 모듈 셋업 : AppModule에 root모듈로 configure. (forRoot)
+
+[app.module.ts]
+import { TypeOrmModule } from '@nestjs/typeorm';
+ 
+@Module({
+  imports: [
+    TypeOrmModule.forRoot({ 
+      type: 'postgres',
+      host: '172.29.32.1', // 아래 2-1 방법 참고. 
+      port: 5432,
+      username: 'postgres',
+      password: '12345', // localhost로 접근할 때는 불필요.
+      database: 'uber-eats',
+      synchronize: true, // TypeORM이 DB에 연결될 때 Model들의 현재 상태에 맞추어 DB를 migrate하는 설정.
+      logging: true, // DB에서 일어나는 일들을 콘솔에 표시해주는 설정.
+
+      entities: [PodcastEntity, EpisodeEntity] // 사용할 entity들 설정.
+    }), 
+    ~~
+  ],
+  ~~
+})
+export class AppModule {}
+
+참고) ormconfig.json 파일에 해당 config 옵션들 지정하는 것도 가능.
+==========================================================================
+2-1) wsl2 + 윈도우에서 postgreSQL을 설치하는 경우
+
+1. 윈도우: cmd > [ipconfig] 실행
+- Ethernet adapter vEthernet (WSL):의 IPv4 주소 복사
+- 프로젝트의 'app.module.ts' > TypeOrmModule.forRoot의 attribute 중 
+  host 값으로 사용. host: 'localhost' 대신 붙여넣기.
+
+2. 윈도우: PC:\Program Files\PostgreSQL\13\data 
+- pg_hba.conf 파일을 메모장으로 열기.
+- 하단의 # TYPE DATABASE USER ADDRESS METHOD 밑에 
+  host all all 0.0.0.0/0 md5 라고 적고 저장.
+
+3. 설정 > 방화벽 및 네트워크 보호 검색 > 고급 설정 > 좌측의 '인바운드 규칙'
+-> 우측의 '새 규칙' -> 포트 -> 포트번호(5432) 입력 
+-> rule 이름(Port 5432 PostgreSQL) 넣고 저장.
+
+==========================================================================
+3) Entity - Repository Injection
+
+[PodcastModule] Service에 @InjectRepository할 entity들 가져오기.
+@Module({
+  imports: [TypeOrmModule.forFeature([PodcastEntity, EpisodeEntity])],
+  providers: [PodcastService, PodcastResolver, EpisodeService, EpisodeResolver],
+})
+export class PodcastModule {}
+
+========================== 
+[PodcastService]
+@Injectable()
+export class PodcastService {
+  constructor(
+    @InjectRepository(PodcastEntity)
+    private readonly podcastRepo: Repository<PodcastEntity>,
+  ) {}
+~~
+}
+==========================================================================
+4) TypeORM Entity 생성 : @Entity(), @Column() 등 설정.
+
+CoreEntity: @Entity, @InputType는 상속받는 쪽에 존재하므로 생략 가능
+          : @Column(), @PrimaryGeneratedColumn() 등만 설정 필요.
+
+[core.entity.ts]  
+@ObjectType() // GraphQL 스키마 자동생성 목적 - 상속하는 쪽 & 상속받는 쪽 모두 필요. 없으면 해당 필드들 제대로 상속 안됨.
+export class CoreEntity {
+  @PrimaryGeneratedColumn() // TypeORM
+  @Field((type) => Int) // GraphQL
+  @IsNumber()
+  readonly id: number;
+}
+========================== 
+[podcast.entity.ts]
+@InputType('PodcastInputType', { isAbstract: true }) // MappedTypes를 통해 해당 GraphQL 엔티티로 dto 생성하기 위해 필요. isAbstract:  GraphQL 스키마에서 @InputType의 엔티티 생성 방지. // 엔티티들 사이에 1대다 관계 등 설정시, @InputType에 별도의 타입명 부여 필요.
+@ObjectType() // GraphQL 스키마에 @ObjectType만 생성
+@Entity()
+export class Podcast extends CoreEntity {
+  @Column() // TypeORM
+  @Field((type) => String) // GraphQL
+  @IsString()
+  readonly title: string;
+}  
+
+주의: DTO는 typeORM과 무관. GraphQL & typeORM은 별개의 개념.
+==========================================================================

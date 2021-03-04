@@ -1,0 +1,6 @@
+{
+  "scripts": {
+    "tailwind:build": "tailwind build ./src/styles/tailwind.css -o ./src/styles/styles.css",
+    "start": "tailwind:build & react-scripts start"
+  }
+}
