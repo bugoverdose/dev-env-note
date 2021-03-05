@@ -49,11 +49,11 @@ module.exports = {
 // package.json
 "scripts": {
     "tailwind:build": "tailwind build ./src/styles/tailwind.css -o ./src/styles/styles.css",
-    "start": "tailwind:build & react-scripts start",
+    "start": "npm run tailwind:build & react-scripts start",
 }
 
 // npm run tailwind:build 실행시, 아웃풋경로에 모든 tailwind 클래스들 + 추가로 생성한 클래스들 생성됨.
-// npm run start : 저장할 때마다 자동으로 tailwind:build가 필요한 경우 재실행되도록 설정.
+// npm run start : 실행할 때마다 tailwind:build가 필요한 경우 자동으로 재실행되도록 설정. (캡슐화 작업 진행한 경우)
 ===============================================================
 6) index.tsx 파일에서 아웃풋경로 그대로 import. => tailwind 클래스들 그대로 사용 가능.
 import "./styles/styles.css";

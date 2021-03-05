@@ -5,11 +5,60 @@
 // npm init & git init 불필요
 
 npm run start
- 
+
 =====================================================================
-참고) 주요 패키지들 
-> npm install react-router-dom // https://reactrouter.com/web/guides/quick-start
+3) [React Router DOM - TS 셋업]
+
+npm install react-router-dom                 // https://reactrouter.com/web/guides/quick-start
+npm i --save-dev @types/react-router-dom     // react-router-dom은 js로만 작성됨 => ts의 타입시스템은 기본적으로 이해 불가.
+
+========================================
+[routers/logged-out-router.tsx]
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom"; // HashRouter는 url에 #가 보이지만 배포하기는 더 쉬움.
+export const LoggedOutRouter = () => {
+  return (
+    <Router>
+      <Switch>          // Switch : 한번에 한개의 Route만 render할 수 있게 해주는 기능
+        <Route path="/create-account">
+          <CreateAccount />
+        </Route>
+        <Route path="/">
+          <Login />
+        </Route>        // "/create-account" 라우트가 "/" 라우트보다 위에 존재해야 함.
+      </Switch>
+    </Router>
+  );
+};
+========================================
+[App.tsx]
+function App() {
+  return <LoggedOutRouter />;
+}
+
+export default App;
+========================================
+// [pages/login.tsx]
+import React from "react";
+
+export const Login = () => {
+  return <span>Login</span>;
+};
+
+=====================================================================
+참고) 주요 패키지들  
+> npm i react-hook-form // https://react-hook-form.com/
 > npm install prop-types 
 > npm install styled-components 
+
+=====================================================================
+cf) js로만 작성된 npm 패키지를 ts로 사용하는 방법들
+1) npm i --save-dev @types/패키지명
+- DefinitelyTyped/types : ts로 만들어지지 않은 라이브러리들의 타입들을 다른 사람들이 만들어놓은 것. (https://github.com/DefinitelyTyped/DefinitelyTyped) 
+ex) npm i --save-dev @types/react-router-dom 
+
+2) [react-app-env.d.ts] 파일에 declare module "패키지명"; 추가 
+ex) declare module "react-router-dom";
+단점: 자동완성 기능 활용불가. 잘못된 prop 전달 등 버그 증가. 
+    : @types/패키지명이 존재하지 않는 경우에만 사용할 것.
 
 =====================================================================

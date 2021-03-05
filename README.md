@@ -1,3 +1,8 @@
-# Dev Env Notes
+# dev env notes
 
-dev environment study notes
+development environment notes
+
+- setup
+- deployment
+- devtools
+- basic concepts
