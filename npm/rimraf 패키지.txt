@@ -1,0 +1,8 @@
+npm i rimraf
+- 폴더를 삭제하는 명령어 생성을 위한 패키지.
+- 맥/리눅스 방식 & 윈도우 방식 자동으로 동시에 지원됨.
+
+- rimraf <삭제할 폴더 경로>
+
+rimraf src/generated_api_types && apollo client:codegen src/generated_api_types --target=typescript --outputFlat
+rm -rf src/generated_api_types && apollo client:codegen src/generated_api_types --target=typescript --outputFlat

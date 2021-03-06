@@ -1,6 +1,6 @@
 [GraphQL 셋업] https://www.apollographql.com/docs/react/get-started/
 
-1) npm install @apollo/client graphql
+1) npm install @apollo/client graphql         
 
 ===============================================================
 2) ApolloClient 생성 : 별도의 파일 생성하고, GraphQL Playground에 연결.
@@ -30,9 +30,9 @@ ReactDOM.render(
   </React.StrictMode>,
   document.getElementById("root")
 );
-
+ 
 ===============================================================
-4) http://localhost:3000/
+http://localhost:3000/
 - 개발자도구 > Apollo Client dev tools 익스텐션: doc에서 query & mutations 확인 가능.
 
 cf) 프론트 & 백엔드 함께 실행 중일 때, 백엔드의 서버와 연결되는 순간

@@ -1,0 +1,61 @@
+Apollo-tooling : TS용 TypeDefinition 자동 생성 도구. 
+- ex) 백엔드로 보내지는 mutation & 받은 responses의 타입 validation 가능해짐.
+
+- Nest에서 DTO들로 생성된 스키마를 읽고,
+  프론트엔드에서 사용된 query, mutation 등을 위한 TS types 자동 생성
+=> 즉, query 보낼 때 백엔드에서 dto들 그대로 활용 가능해짐. 개발 도중 ts type validation도 자동 제공.
+
+===============================================================
+0) npm i -g apollo        // global & 개별프로젝트에 설치
+   npm i apollo           
+
+===============================================================
+1) Apollo Tooling 셋업 : apollo.config.js 생성. (https://www.apollographql.com/docs/devtools/apollo-config/)
+// src 외부에 생성. 주석X => 에러 발생 가능.
+
+// [apollo.config.js]
+module.exports = {
+  client: {
+    includes: ["./src/**/*.tsx"],              // src 폴더 내부의 모든 폴더들의 .tsx 파일들 찾기. 폴더 내부의 폴더들도 다 찾음.
+    tagName: "gql",                            // gql`` 형식의 graphql문들을 대상으로 함.
+    service: {
+      name: "uber-eats-backend",               // 이름은 자유 지정.
+      url: "http://localhost:4000/graphql",    // 백엔드 graphql url
+    },
+  },                      // includes에 지정된 파일들에서 사용된 gql``에 대해 관련 TS definition을 제공. // 즉, 모든 스키마를 전부 다 import해오지 않음. 사용하는 것들만 가져옴.
+};                        // excludes: 디폴트로 **/node_modules & **/__tests___는 포함되지 않음.
+ 
+===============================================================
+2) package.json에 apollo-tool 명령어 생성 (https://github.com/apollographql/apollo-tooling)
+- --outputFlat 옵션 : 하나의 폴더에 모든 타입 파일들 모을 수 있는 기능.
+- 전부 src 폴더 내부에 생성되도록 주의.
+- 현재 script로 실행시 버그 발생 중(2021/03/06)
+
+"scripts": {
+    "apollo:codegen": "apollo client:codegen src/generated_api_types --target=typescript --outputFlat",
+    // ~~
+  },
+
+> npm run apollo:codegen
+
+=============================================================== 
+3) Nest에 설정한 InputType의 DTO를 사용하여 codegen 실행 => globalTypes 파일 버그 자동해결
+
+예시) LoginInputDto 활용
+const LOGIN_MUTATION = gql`
+  mutation LoginMutation($loginInput: LoginInputDto!) {
+    login(input: $loginInput) {
+      ok
+      error
+      token
+    }
+  }
+`;
+
+=============================================================== 
+cf) globalTypes.ts 파일 버그
+: InputType 등의 global type이 전혀 없으면, 즉 모듈 형식이 아니면 ts 버그 발생.
+
+// [src/generated_api_types/globalTypes.ts]
+export {}
+=============================================================== 
