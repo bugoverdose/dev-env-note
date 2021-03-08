@@ -5,54 +5,68 @@
 // npm init & git init 불필요
 
 npm run start
+=====================================================================
+[React - fontawesome 셋업] (https://fontawesome.com/how-to-use/on-the-web/using-with/react)
+
+npm i --save @fortawesome/fontawesome-svg-core      
+npm install --save @fortawesome/free-solid-svg-icons
+npm install --save @fortawesome/react-fontawesome
+
+// npm install --save @fortawesome/free-brands-svg-icons    // 깃헙 로고 등 추가 사용 목적.
+// npm install --save @fortawesome/free-regular-svg-icons
 
 =====================================================================
-3) [React Router DOM - TS 셋업]
+[Router - TS 셋업]
 
 npm install react-router-dom                 // https://reactrouter.com/web/guides/quick-start
 npm i --save-dev @types/react-router-dom     // react-router-dom은 js로만 작성됨 => ts의 타입시스템은 기본적으로 이해 불가.
 
-========================================
-[routers/logged-out-router.tsx]
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom"; // HashRouter는 url에 #가 보이지만 배포하기는 더 쉬움.
-export const LoggedOutRouter = () => {
+=====================================================================
+[React Helmet 셋업 - title 태그 업데이트용 패키지]
+
+npm i react-helmet-async   // ts 지원되지만 import 형식 주의 & HelmetProvider 필요
+
+1) [public/index.html]의 title 태그에는 디폴트로 적용될 내용을 값으로 지정. 
+
+2) [index.tsx] : HelmetProvider으로 App 감싸기 필요. 
+import { HelmetProvider } from "react-helmet-async";
+
+ReactDOM.render(
+  <React.StrictMode>
+    <ApolloProvider client={client}>
+      <HelmetProvider>
+        <App />
+      </HelmetProvider>
+    </ApolloProvider>
+  </React.StrictMode>,
+  document.getElementById("root")
+);
+
+3) 각 Route의 컴포넌트에서 탭에 적용할 title 태그 덮어쓰기. 
+import { Helmet } from "react-helmet-async";  
+~~
   return (
-    <Router>
-      <Switch>          // Switch : 한번에 한개의 Route만 render할 수 있게 해주는 기능
-        <Route path="/create-account">
-          <CreateAccount />
-        </Route>
-        <Route path="/">
-          <Login />
-        </Route>        // "/create-account" 라우트가 "/" 라우트보다 위에 존재해야 함.
-      </Switch>
-    </Router>
-  );
-};
-========================================
-[App.tsx]
-function App() {
-  return <LoggedOutRouter />;
-}
+    <div>
+      <Helmet> <title>Login | Uber Eats</title> </Helmet>
+    </div>  
+  )
 
-export default App;
 ========================================
-// [pages/login.tsx]
-import React from "react";
+npm i react-helmet      // 사용해도 되지만 콘솔에 Warning 존재.
+npm i --save-dev @types/react-helmet
 
-export const Login = () => {
-  return <span>Login</span>;
-};
+import Helmet from "react-helmet"  // HelmetProvider 불필요.
 
 =====================================================================
-참고) 주요 패키지들  
-> npm i react-hook-form // https://react-hook-form.com/
-> npm install prop-types 
-> npm install styled-components 
+[useForm 셋업]
+> npm i react-hook-form      // https://react-hook-form.com/
+
+import { useForm } from "react-hook-form";
 
 =====================================================================
-cf) js로만 작성된 npm 패키지를 ts로 사용하는 방법들
+[js로 작성된 npm 패키지를 ts로 사용하는 방법들]
 1) npm i --save-dev @types/패키지명
+
 - DefinitelyTyped/types : ts로 만들어지지 않은 라이브러리들의 타입들을 다른 사람들이 만들어놓은 것. (https://github.com/DefinitelyTyped/DefinitelyTyped) 
 ex) npm i --save-dev @types/react-router-dom 
 
@@ -62,3 +76,6 @@ ex) declare module "react-router-dom";
     : @types/패키지명이 존재하지 않는 경우에만 사용할 것.
 
 =====================================================================
+참고) 기타 React 관련 주요 패키지들   
+> npm install prop-types 
+> npm install styled-components 
