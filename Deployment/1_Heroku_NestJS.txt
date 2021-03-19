@@ -1,0 +1,147 @@
+[Heroku 셋업] 프로젝트 외부적으로 사전 진행.
+1) Heroku CLI 설치(https://devcenter.heroku.com/articles/heroku-cli)
+
+> heroku           // 터미널에서 heroku 실행되면 이미 CLI가 설치된 상태.
+
+// 우분투 터미널에 CLI 설치하는 방법들.
+> sudo snap install --classic heroku   
+> curl https://cli-assets.heroku.com/install.sh | sh 
+  // WSL2 외부 터미널에서 실행 => /usr/local/bin/heroku에 저장됨.
+
+=============================================================================
+2) Heroku 사이트에서 앱 생성(https://dashboard.heroku.com/apps)
+- Create new app - App name & Choose a region
+
+=============================================================================
+cf) Dynos: Heroku에서 app을 다루는 방식
+- Free Dynos : 수면 상태. 오랜만에 사용자가 방문하면 앱이 재시작되는 데 시간 걸림.
+- 앱을 실시간으로 구동시키려면 Dyno type을 유료로 변경 필요.
+- AWS를 직접 사용하는 것이 더 저렴함. AWS 기반 서비스이기 때문.
+
+https://dashboard.heroku.com/apps > App 선택 > Overview > Configure Dynos
+
+
+
+
+
+=============================================================================
+=============================================================================
+[프로젝트 내부 설정]
+1) Build : src 폴더의 모든 파일들을 JS 코드로 컴파일
+
+> npm run build      
+
+==========================================
+"scripts": {
+  "prebuild": "rimraf dist",   // build 실행시 사전에 기존 dist 폴더 삭제
+  "build": "nest build",      // 모든 TS 코드를 JS 코드로 변환하여 dist 폴더에 저장.
+  "start": "nest start", 
+  "start:prod": "node dist/main", // nodeJS에서 dist/main.js 실행. // dist 내부 구조 사전 체크.
+},
+// git push heroku master 실행시 최종적으로 npm run start가 실행됨.
+// Procfile 파일 생성하여 실행될 명령어 재설정 가능.
+
+=============================================================================
+2) Procfile 파일 생성. (src 외부) (https://devcenter.heroku.com/articles/procfile)
+
+// Procfile
+web: npm run start:prod       // Heroku 서버에서 해당 명령어 실행되도록 설정.
+
+https://dashboard.heroku.com/apps > App 선택 > Overview에서 확인 가능.
+- 디폴트: web: npm start
+- Procfile 존재: web: npm run start:prod
+
+=============================================================================
+3) 개별 환경변수 설정
+- Heroku의 경우 NODE_ENV=production로 설정 필요.
+
+> heroku config             // 현재 Heroku 서버에 설정된 환경변수들 확인.               
+> heroku config --help    
+
+[CLI 방법]
+> heroku config:set NODE_ENV=production  // Heroku 서버로 환경변수 전달하여 설정.
+> heroku config                   //  재배포 불필요. 즉시 서버에 반영.
+
+==========================================
+[GUI 방법]
+https://dashboard.heroku.com/apps > App 선택 > Settings > Reveal Config Vars
+
+=============================================================================
+=============================================================================
+4) Add-ons : Heroku Postgres 
+
+[App에 DB 생성하여 연결]
+https://elements.heroku.com/addons > Heroku Postgres > Install Heroku Postgres
+> Hobby Dev - Free 
+> App to provision to : 생성한 Heroku App명 선택
+> Submit Order Form                               // 해당 DB 생성
+
+==========================================
+[DB 정보 확인 방법]   
+App 선택 > Resources > Heroku Postgres 클릭
+> Settings > Database Credentials - View Credentials...
+
+Host / Database / User / Port / Password : 환경변수로 설정 가능.
+
+주의: 해당 정보들은 영구적이지 않으므로 DATABASE_URL 활용 필요. => [1.1_DB 환경변수]
+
+=============================================================================
+5) Port 번호 수정
+- 배포했을 때 Heroku 서버가 환경변수로 담아주는 PORT 번호 사용하도록.
+
+[main.ts]
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+  app.useGlobalPipes(new ValidationPipe());
+  await app.listen(process.env.PORT || 3000); // 개발 도중에는 3000 그대로 사용.   
+}
+bootstrap();
+
+
+
+
+
+=============================================================================
+=============================================================================
+[Heroku Git 배포] 프로젝트 내부에서 진행
+
+1) 프로젝트 자체적으로 Heroku에 로그인. 
+
+> heroku login          
+// => 생성되는 브라우저에서 Log In 클릭.
+
+=============================================================================
+2) 깃으로 Heroku 사이트에 생성한 앱에 연결. 
+
+> heroku git:remote -a AppName
+> git remote -v      
+
+=============================================================================
+3) Configure 완료된 프로젝트를 Heroku 서버로 보내기. 
+> git commit -m "~"           // 사전에 꼭 커밋 필요.
+> git push heroku master
+
+[디폴트 동작 과정: Procfile 없는 경우]
+// Heroku 서버에서 자동으로 package.json의 패키지들 다운로드
+// => npm run prebuild 실행 =>  npm run build 실행
+// => npm run start 실행. 자동으로 서버 구동됨.
+
+===========================================
+cf) Application error 발생한 경우. 에러 확인용 명령어.
+> heroku logs --tail             // 실시간으로 로그 남기기.
+
+
+
+
+=============================================================================
+=============================================================================
+중요) Deployment Method : Github 배포
+- App > Deploy > Deployment Method > Github
+: git push origin master를 하면 자동으로 heroku 서버도 업데이트
+  git push heroku master 과정 생략됨.
+
+=============================================================================
+중요) 개발환경에서 사용된 localhost 주소들의 경우 (passport 등)
+process.env.NODE_ENV === production일 때 다른 주소를 사용하도록 사전 설정 필수.
+
+=============================================================================

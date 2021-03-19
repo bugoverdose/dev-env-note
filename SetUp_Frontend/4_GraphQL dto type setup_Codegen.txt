@@ -6,8 +6,11 @@ Apollo-tooling : TS용 TypeDefinition 자동 생성 도구.
 => 즉, query 보낼 때 백엔드에서 dto들 그대로 활용 가능해짐. 개발 도중 ts type validation도 자동 제공.
 
 ===============================================================
-0) npm i -g apollo        // global & 개별프로젝트에 설치
-   npm i apollo           
+0) npm i apollo 
+// 개별 프로젝트에 설치시, npm run 명령어로만 실행 가능.
+
+cf) 개별 프로젝트에 설치 혹은 글로벌로 설치 중 하나만 선택.
+// npm i -g apollo : 글로벌로 설치하면 npm run 명령어로 실행시 버그 발생. 콘솔에 apollo 명령어 직접 실행 가능.
 
 ===============================================================
 1) Apollo Tooling 셋업 : apollo.config.js 생성. (https://www.apollographql.com/docs/devtools/apollo-config/)

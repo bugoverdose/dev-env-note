@@ -11,18 +11,22 @@
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(new ValidationPipe()); 
-  await app.listen(3000);
+  await app.listen(process.env.PORT || 3000);;
 }
 bootstrap();
 
 ===============================================================
 2) GraphQLModule 셋업 : AppModule에 root모듈로 configure. (forRoot)
 - { autoSchemaFile: true } 옵션 : schema.gql 파일을 메모리에 생성 + 저장.
+- { playground: true } 옵션 : playground에 접근 못하도록 false 설정. 개발 목적.
 
 [app.module.ts]
 @Module({
   imports: [
-    GraphQLModule.forRoot({ autoSchemaFile: true }),
+    GraphQLModule.forRoot({ 
+      autoSchemaFile: true  
+      playground: process.env.NODE_ENV !== "production"  // 배포하면 playground에 접근 못하도록 false 설정. 개발 목적.
+    }),
     PodcastModule, 
   ],
   controllers: [AppController],
