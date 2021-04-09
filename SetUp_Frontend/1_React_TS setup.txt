@@ -76,6 +76,4 @@ ex) declare module "react-router-dom";
     : @types/패키지명이 존재하지 않는 경우에만 사용할 것.
 
 =====================================================================
-참고) 기타 React 관련 주요 패키지들   
-> npm install prop-types 
-> npm install styled-components 
+ 

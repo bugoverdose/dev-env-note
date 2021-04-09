@@ -1,6 +1,6 @@
 [GraphQL 셋업] https://www.apollographql.com/docs/react/get-started/
 
-1) npm install @apollo/client graphql         
+1) npm install @apollo/client graphql
 
 ===============================================================
 2) ApolloClient 생성 : 별도의 파일 생성하고, GraphQL Playground에 연결.
@@ -47,7 +47,7 @@ cf) reactive variable로 local only field 사용 방법 예시
 // [apollo.ts]
 import { ApolloClient, InMemoryCache, makeVar } from "@apollo/client";
 
-const isLoggedInVar = makeVar(false); // reactive variable 생성. 디폴트값은 false.
+export const isLoggedInVar = makeVar(false); // reactive variable 생성. 디폴트값은 false.
 
 export const client = new ApolloClient({
   uri: "http://localhost:4000/graphql", // 백엔드의 playground 주소. (프론트엔드와 포트 번호는 달라야 함)

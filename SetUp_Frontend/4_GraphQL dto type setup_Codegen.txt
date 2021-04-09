@@ -35,16 +35,18 @@ module.exports = {
 - 현재 script로 실행시 버그 발생 중(2021/03/06)
 
 "scripts": {
-    "apollo:codegen": "apollo client:codegen src/generated_api_types --target=typescript --outputFlat",
-    // ~~
+    "apollo:codegen": "rm -rf src/generated_api_types && apollo client:codegen src/generated_api_types --target=typescript --outputFlat",
+    "start": "npm run apollo:codegen & npm run tailwind:build & react-scripts start",
   },
 
 > npm run apollo:codegen
 
 =============================================================== 
-3) Nest에 설정한 InputType의 DTO를 사용하여 codegen 실행 => globalTypes 파일 버그 자동해결
+3) Nest에 설정한 InputType의 DTO를 gql문에서 사용하여 codegen 실행.
 
 예시) LoginInputDto 활용
+import { gql } from "@apollo/client";
+
 const LOGIN_MUTATION = gql`
   mutation LoginMutation($loginInput: LoginInputDto!) {
     login(input: $loginInput) {

@@ -1,0 +1,20 @@
+npx create-react-app 프로젝트명
+
+===================================================================
+npx create-react-app ~ 
+1) 최신 버전의 create-react-app를 설치
+2) create-react-app을 실행
+3) create-react-app을 삭제.
+
+npx 자체만 설치되어있으면 됨. npm 설치시 기본적으로 함께 설치됨.
+- npm i npx -g 
+- yarn global add npx 불필요.
+
+===================================================================
+create-react-app 
+- 매번 최신 버전으로 실행해줘야 함.
+- yarn global add create-react-app처럼 글로벌 모듈로 설치해놓고, 
+  create-react-app를 실행하는 것은 지양! 
+- 매번 새로운 버전의 create-react-app로 업데이트 필요.
+
+ ===================================================================
