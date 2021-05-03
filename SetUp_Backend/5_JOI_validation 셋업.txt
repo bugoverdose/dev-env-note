@@ -15,9 +15,9 @@ import * as Joi from 'joi'; // import 형식 주의.
     ConfigModule.forRoot({
       isGlobal: true,                    // app 어디서든 ConfigModule에 접근 가능. => import 불필요.
       envFilePath: process.env.NODE_ENV === 'dev' ? '.env.dev' : '.env.test', // boolean
-      ignoreEnvFile: process.env.NODE_ENV === 'production', // 참이면 ConfigModule은 환경변수 파일 무시. 다른 방법으로 환경변수들 얻게 됨.      
+      ignoreEnvFile: process.env.NODE_ENV === 'prod', // 참이면 ConfigModule은 환경변수 파일 무시. 다른 방법으로 환경변수들 얻게 됨.      
       validationSchema: Joi.object({
-        NODE_ENV: Joi.string().valid('dev', 'production', 'test').required(), // NODE_ENV의 값은 dev, production, test만 가능하도록 지정. Jest 자체 디폴트 값은 NODE_ENV=test
+        NODE_ENV: Joi.string().valid('dev', 'prod', 'test').required(), // NODE_ENV의 값은 dev, production, test만 가능하도록 지정. Jest 자체 디폴트 값은 NODE_ENV=test
         DB_HOST: Joi.string().required(), // DB_HOST는 문자열이어야 하며 존재해야만 함.
         DB_PORT: Joi.string().required(), // Config Object Validation
         DB_USERNAME: Joi.string().required(),

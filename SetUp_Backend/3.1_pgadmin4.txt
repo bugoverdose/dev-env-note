@@ -1,0 +1,25 @@
+pgAdmin4
+- PostgreSQL과 상호작용하기 위한 GUI 도구. 항상 구동 중일 필요 없음.
+- 다만 PostgreSQL 서버를 사용하려면 PostgreSQL 서버가 항상 구동 상태여야 함.
+
+=====================================================
+PostgreSQL 서버 생성 (1개 있으면 그냥 그대로 유지)
+- Servers 우클릭 > Create > Server
+- General - Name : 서버명은 자유 지정
+- Connection - Host name/address : localhost 설정. 
+- 나머지는 그대로.(Port:5432, postgres 등) > Save
+
+=====================================================
+데이터베이스 생성
+- Servers > 특정서버(PostgreSQL 13) > Databases 우클릭 - Create - Database
+- Database : uber-eats 등 데이터베이스명 자유 지정
+- Owner : postgres - 원래는 bugod처럼 사용자명을 지정해야 함 > Save
+
+cf) 해당 DB 우클릭 - Properties로 설정 변경 가능.
+=====================================================
+비밀번호 설정(DB_PASSWORD)
+특정 서버 > Login/Group Roles > postgres 우클릭 -  Properties
+- Definition - Password로 해당 서버의 비밀번호 변경
+
+=====================================================
+

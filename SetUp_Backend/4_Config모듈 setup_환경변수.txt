@@ -3,7 +3,7 @@
 - @nestjs/config: dotenv 위에서 동작함. nest.js 방식으로 dotenv를 구동. ConfigModule.
 
 =======================================================================
-1) npm i --save @nestjs/config
+1) npm i --save @nestjs/config 
    npm i cross-env  // 윈도우,맥,리눅스 등 상관없이 가상 변수 사용 가능하도록 해주는 패키지.
 
 ======================================================
@@ -39,7 +39,7 @@ import { ConfigModule } from '@nestjs/config';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true, // app 어디서든 config 모듈에 접근 가능.
-      envFilePath: process.env.NODE_ENV === 'dev' ? '.env.dev' : '.env.test', // boolean
+      envFilePath: process.env.NODE_ENV === 'dev' ? '.env.dev' : '.env.test', 
      // process.env.NODE_ENV은 환경변수들의 경로. 변수명 NODE_ENV은 package.json의 명령어에 대응되도록.
       // NODE_ENV=dev로 실행했으면 참이므로 .env.dev 사용. 그 외의 경우 거짓이므로 .env.test 사용.
     }),

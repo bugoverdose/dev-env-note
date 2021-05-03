@@ -5,12 +5,15 @@
 
 ===============================================================
 1-1) npm i class-validator
+     npm install class-transformer
+
 // ArgsType Validation : dto에서 특정한 데이터들만 전달되도록 유효성 검사 목적.
 
 [main.ts] ValidationPipe 설정 => ArgsType Validation 가능하도록 설정. 
+import { ValidationPipe } from '@nestjs/common';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.useGlobalPipes(new ValidationPipe()); 
+  app.useGlobalPipes(new ValidationPipe());     
   await app.listen(process.env.PORT || 3000);;
 }
 bootstrap();
@@ -24,7 +27,7 @@ bootstrap();
 @Module({
   imports: [
     GraphQLModule.forRoot({ 
-      autoSchemaFile: true  
+      autoSchemaFile: true, 
       playground: process.env.NODE_ENV !== "production"  // 배포하면 playground에 접근 못하도록 false 설정. 개발 목적.
     }),
     PodcastModule, 

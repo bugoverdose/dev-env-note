@@ -9,6 +9,7 @@ npm run start
 [React - fontawesome 셋업] (https://fontawesome.com/how-to-use/on-the-web/using-with/react)
 
 npm i --save @fortawesome/fontawesome-svg-core      
+npm audit fix                                            // vulnerabilities
 npm install --save @fortawesome/free-solid-svg-icons
 npm install --save @fortawesome/react-fontawesome
 

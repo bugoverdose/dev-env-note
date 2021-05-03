@@ -1,6 +1,6 @@
 [Nest setup]
 0) npm install -g @nestjs/cli
-- nest          // 주요 명령어 확인 가능능
+- nest          // 주요 명령어 확인 가능
 
 1) nest new     // nest 프로젝트 생성 명령어 (외부 터미널에서 실행)
 - 프로젝트명
