@@ -1,0 +1,58 @@
+ReplicationController(=RC)
+- Pod를 관리해주는 역할
+- 지정된 숫자로 Pod를 기동시키고, 관리하는 역할을 수행함. 
+
+3가지 파트로 구성
+- Replica의 수 : RC에 의해 관리되는 Pod의 개수. 그 숫자만큼 Pod의 수를 유지.
+- Pod Selector : 라벨을 기반으로 하여, RC가 관리하는 Pod를 가져오는 역할.
+- Pod Template : Pod를 추가로 기동할 때 필요한 Pod에 대한 정보를 정의하는 역할.
+                 도커 이미지, 포트, 라벨 등 Pod를 어떻게 만들지에 대한 정보를 정의.
+                 
+=================================================================================
+[주의] 이미 돌고 있는 Pod가 있는 상태에서 RC 리소스를 생성한 경우
+       그 Pod의 라벨이 RC의 라벨과 일치하면 새롭게 생성된 RC의 컨트롤을 받게 됨. 
+
+1) 해당 Pod들이 RC에서 정의한 replica 수 보다 많으면 추가분의 pod를 삭제하고, 
+   모자르면 template에 정의된 Pod 정보에 따라서 새로운 Pod를 생성. 
+ex) replica 수가 3이면, 3개의 Pod만 띄우도록 함. 
+    이보다 Pod가 모자르면 새로운 Pod를 띄우고, 이보다 숫자가 많으면 남는 Pod를 삭제.
+
+2) 기존에 생성되어 있는 Pod가 template에 정의된 스펙과 다른 경우 삭제하지 않음!!   
+- 기존에 아파치 웹서버로 기동중인 Pod가 있고, 
+  RC의 template은 nginx로 Pod를 실행하도록 설정된 경우
+  기존에 돌고 있는 아파치 웹서버 기반의 Pod를 삭제하지 않음. 
+
+=================================================================================
+[RC 리소스 정의 예시]
+
+apiVersion: v1                 // 스크립트를 실행할 api 버전은 v1으로 apiVersion에 정의
+kind: ReplicationController    // 리소스 종류는 RC
+metadata:         
+  name: nginx        // ngnix라는 이름의 RC를 정의
+spec:           
+  replicas: 3   // 1) replica의 개수. 3개의 Pod가 RC에 의해 항상 관리되도록 설정 
+  selector:
+    app: nginx  // 2) Pod Selector. label이 “app:ngnix”인 Pod들을 관리
+  template      // 3) Pod Template
+    metadata:
+      name: nginx
+      labels:
+        app: nginx 
+    spec: 
+      containers:
+      - name: nginx
+       image: nginx          // nginx 이미지를 사용해서 Pod 생성 
+       ports:
+       - containerPort: 80  // 컨테이너의 포트로 80 번 포트를 이용하여 서비스를 제공
+
+=================================================================================
+ReplicaSet
+- Replication Controller의 새로운 버전
+
+비교) Replication Controller는 Equality 기반 Selector를 사용함. 
+      Replica Set은 Set 기반의 Selector를 사용함. 
+
+cf) Equality based selector: 같냐/다르냐와 같은 등가 조건을 이용하여 리소스를 선택하는 방법
+    Set based selector: 집합의 개념을 사용하여 리소스를 선택하는 방법. 
+
+=================================================================================
