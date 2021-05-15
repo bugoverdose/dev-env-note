@@ -1,6 +1,4 @@
-# dev env notes
-
-development environment notes
+# Development Environment Notes
 
 - setup
 - deployment
