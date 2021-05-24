@@ -10,11 +10,11 @@
 // npm init & git init 불필요
 
 ===============================================================
-3) nest g mo podcast
+3) nest g mo users
 
 [app.module.ts]
 @Module({
-  imports: [PodcastModule], // 앱에서 사용할 모든 모듈들의 배열. 
+  imports: [UsersModule],   // 앱에서 사용할 모든 모듈들의 배열. 
                             // ConfigModule, TypeOrmModule, GraphQLModule 등도 전부 포함.
   controllers: [AppController],
   providers: [AppService],

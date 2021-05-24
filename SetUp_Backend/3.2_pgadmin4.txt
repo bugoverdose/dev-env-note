@@ -17,9 +17,9 @@ PostgreSQL 서버 생성 (1개 있으면 그냥 그대로 유지)
 
 cf) 해당 DB 우클릭 - Properties로 설정 변경 가능.
 =====================================================
-비밀번호 설정(DB_PASSWORD)
+비밀번호 설정
 특정 서버 > Login/Group Roles > postgres 우클릭 -  Properties
-- Definition - Password로 해당 서버의 비밀번호 변경
+- Definition - Password로 해당 서버의 비밀번호 변경 가능 : 12345 설정
 
 =====================================================
 

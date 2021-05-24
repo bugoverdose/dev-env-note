@@ -1,11 +1,13 @@
 [Apollo Server 셋업]
 
+주의. 아무런 query가 없으면 에러 발생 가능.
+- GraphQLError [Object]: Query root type must be provided.
+
 1) npm i @nestjs/graphql graphql-tools graphql apollo-server-express
 // apollo-server-express 위에서 동작.
 
 ===============================================================
-1-1) npm i class-validator
-     npm install class-transformer
+1-1) npm i class-validator class-transformer
 
 // ArgsType Validation : dto에서 특정한 데이터들만 전달되도록 유효성 검사 목적.
 
@@ -26,11 +28,11 @@ bootstrap();
 [app.module.ts]
 @Module({
   imports: [
-    GraphQLModule.forRoot({ 
-      autoSchemaFile: true, 
-      playground: process.env.NODE_ENV !== "production"  // 배포하면 playground에 접근 못하도록 false 설정. 개발 목적.
+    GraphQLModule.forRoot({
+      autoSchemaFile: true,
+      playground: process.env.NODE_ENV !== 'production', // 배포하지 않았을 때만 playground에 접근가능. 배포하면 false가 되어서 접근 불가.
     }),
-    PodcastModule, 
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
@@ -43,32 +45,32 @@ cf) Code first 접근: queries & resolvers 등을 기준으로 자동으로 스�
 
 ===============================================================
 3) 모듈, resover, service 생성하여 연결. (Dependency Injection)
-nest g mo podcast
-nest g r podcast
-nest g s podcast
+nest g mo users
+nest g r users
+nest g s users
 ===================================
 [podcast.module.ts] 
-@Module({ 
-  providers: [PodcastService, PodcastResolver],  
+@Module({
+  providers: [UsersResolver, UsersService],
 })
-export class PodcastModule {}
+export class UsersModule {}
 ===================================
 [podcast.resolver.ts] 
-@Resolver((of) => Podcast)
-export class PodcastResolver {
-  constructor(private readonly podcastService: PodcastService) {}
+@Resolver()
+export class UsersResolver {
+  constructor(private readonly usersService: UsersService) {}
 
   @Query((returns) => String)
   helloWorld(): string {
-    return this.podcastService.helloWorld();
+    return this.usersService.helloWorld();
   }
 }
 ===================================
 [podcast.service.ts]
 @Injectable()
-export class PodcastService {
+export class UsersService {
   helloWorld(): string {
-    return "Hello World!";
+    return 'Hello World!';
   }
 }
 

@@ -1,0 +1,39 @@
+PostgreSQL 셋업
+1단계) PostgreSQL 13 DB 서버 생성.
+
+주의: GCP 등에서 DB 인스턴스 생성하면 pgadmin에서 IP와 비번으로 연결 가능.
+      로컬 서버는 필수 사항이 아님!
+
+로컬에서 서버 생성하는 방법
+ https://www.postgresql.org/download/
+https://www.enterprisedb.com/downloads/postgres-postgresql-downloads > Windows x86-64 > Download
+
+- C:\Program Files\PostgreSQL\13
+- [PostgreSQL Server] & [Command Line Tools]만 일단 설치
+- 비밀번호 설정 => pgadmin4에서 해당 PostgreSQL 13 서버 접속할 때 요구됨 => DB 연결시 환경변수에도 필요 
+- C:\Program Files\PostgreSQL\13\data
+- Port: 5432
+- locale: Korean, Korea (the locale to be used by the new database cluster)
+
+Installation Directory: C:\Program Files\PostgreSQL\13
+Server Installation Directory: C:\Program Files\PostgreSQL\13
+Data Directory: C:\Program Files\PostgreSQL\13\data
+Database Port: 5432
+Database Superuser: postgreshttps://www.pgadmin.org/download/pgadmin-4-windows/
+Operating System Account: NT AUTHORITY\NetworkService
+Database Service: postgresql-x64-13
+Command Line Tools Installation Directory: C:\Program Files\PostgreSQL\13
+
+=======================================================================
+2단계) pgadmin4 설치. https://www.pgadmin.org/download/pgadmin-4-windows/
+- pgadmin4-5.2-x64.exe 클릭하여 설치 프로그램 다운로드.
+- DB의 내용을 시각화해주는 GUI 앱(Windows용). 
+- PostgreSQL가 구동중인 상태에서 실행해줘야 서버와 연결 가능.
+
+=======================================================================
+3단계) 데이터베이스 생성
+- Servers > 특정서버 > Databases 우클릭 - Create - Database
+- Database : uber-eats 등 데이터베이스명 자유 지정
+- Owner : postgres - 원래는 bugod처럼 사용자명을 지정해야 함 > Save
+
+=======================================================================

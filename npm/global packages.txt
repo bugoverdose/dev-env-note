@@ -3,9 +3,10 @@ npm ls -g
 npm ls -g --depth=0
 
 ==========================================
-npm install nodemon -g
 npm install typescript -g
-npm install localtunnel -g 
-npm install expo-cli -g 
 npm install graphql-playground -g 
 npm install -g @nestjs/cli
+
+npm install nodemon -g
+npm install localtunnel -g 
+npm install expo-cli -g 

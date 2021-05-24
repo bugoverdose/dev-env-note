@@ -23,11 +23,14 @@ https://jestjs.io/docs/en/environment-variables
   imports: [
     ConfigModule.forRoot({
       isGlobal: true, // app 어디서든 config 모듈에 접근 가능. => import 불필요.
+      
       envFilePath: process.env.NODE_ENV === 'dev' ? '.env.dev' : '.env.test', // boolean
       // process.env.NODE_ENV은 환경변수들의 경로. 변수명 NODE_ENV은 package.json의 명령어에 대응되도록.
       // NODE_ENV=dev로 실행했으면 참이므로 .env.dev 사용. 그 외의 경우 거짓이므로 .env.test 사용.
+      
       ignoreEnvFile: process.env.NODE_ENV === 'production', // 참이면 ConfigModule은 환경변수 파일 무시. 다른 방법으로 환경변수들 얻게 됨.
       // NODE_ENV=prod로 실행했을 때만 ignoreEnvFile 옵션이 참이 되도록.
+      
       validationSchema: Joi.object({
         NODE_ENV: Joi.string().valid('dev', 'production', 'test').required(), 
         // NODE_ENV의 값은 dev, production, test만 가능하도록 지정. jest 자체 디폴트 값은 NODE_ENV=test
