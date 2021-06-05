@@ -5,7 +5,7 @@ PostgreSQL 셋업
       로컬 서버는 필수 사항이 아님!
 
 로컬에서 서버 생성하는 방법
- https://www.postgresql.org/download/
+https://www.postgresql.org/download/
 https://www.enterprisedb.com/downloads/postgres-postgresql-downloads > Windows x86-64 > Download
 
 - C:\Program Files\PostgreSQL\13

@@ -1,6 +1,8 @@
 [Heroku 셋업] 프로젝트 외부적으로 사전 진행.
 1) Heroku CLI 설치(https://devcenter.heroku.com/articles/heroku-cli)
 
+> npm install -g heroku    // 그 외 다양한 설치 방법 존재
+
 > heroku           // 터미널에서 heroku 실행되면 이미 CLI가 설치된 상태.
 
 // 우분투 터미널에 CLI 설치하는 방법들.
@@ -38,13 +40,13 @@ https://dashboard.heroku.com/apps > App 선택 > Overview > Configure Dynos
   "start": "nest start", 
   "start:prod": "node dist/main", // nodeJS에서 dist/main.js 실행. // dist 내부 구조 사전 체크.
 },
-// git push heroku master 실행시 최종적으로 npm run start가 실행됨.
+// git push heroku master 실행시 디폴트로 npm run start가 실행됨.
 // Procfile 파일 생성하여 실행될 명령어 재설정 가능.
 
 =============================================================================
 2) Procfile 파일 생성. (src 외부) (https://devcenter.heroku.com/articles/procfile)
 
-// Procfile
+// [Procfile]
 web: npm run start:prod       // Heroku 서버에서 해당 명령어 실행되도록 설정.
 
 https://dashboard.heroku.com/apps > App 선택 > Overview에서 확인 가능.
@@ -53,13 +55,13 @@ https://dashboard.heroku.com/apps > App 선택 > Overview에서 확인 가능.
 
 =============================================================================
 3) 개별 환경변수 설정
-- Heroku의 경우 NODE_ENV=production로 설정 필요.
+- Heroku의 경우 NODE_ENV=prod로 설정 필요.
 
 > heroku config             // 현재 Heroku 서버에 설정된 환경변수들 확인.               
 > heroku config --help    
 
 [CLI 방법]
-> heroku config:set NODE_ENV=production  // Heroku 서버로 환경변수 전달하여 설정.
+> heroku config:set NODE_ENV=prod  // Heroku 서버로 환경변수 전달하여 설정.
 > heroku config                   //  환경변수 설정 후 재배포 불필요. 즉시 서버에 반영.
 
 ==========================================
@@ -81,9 +83,9 @@ https://elements.heroku.com/addons > Heroku Postgres > Install Heroku Postgres
 App 선택 > Resources > Heroku Postgres 클릭
 > Settings > Database Credentials - View Credentials...
 
-Host / Database / User / Port / Password : 환경변수로 설정 가능.
+Host / Database / User / Port / Password => 해당 정보들을 환경변수로 그대로 설정하면 안됨.
 
-주의: 해당 정보들은 영구적이지 않으므로 DATABASE_URL 활용 필요. => [1.1_DB 환경변수]
+주의: 해당 정보들은 영구적이지 않음. 환경변수에 추가되는 DATABASE_URL 그대로 활용. => [1.1_DB 환경변수]
 
 =============================================================================
 5) Port 번호 수정
@@ -113,7 +115,7 @@ bootstrap();
 =============================================================================
 2) 깃으로 Heroku 사이트에 생성한 앱에 연결. 
 
-> heroku git:remote -a AppName
+> heroku git:remote -a AppName   // heroku git:remote -a thesis-experiment-backend
 > git remote -v      
  
 =============================================================================

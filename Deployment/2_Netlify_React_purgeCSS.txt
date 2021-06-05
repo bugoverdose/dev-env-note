@@ -42,7 +42,7 @@
 },
 // netlify 서버에서 최종적으로 npm run build가 실행됨. (Netlify 서버에서 수정 가능)
 // prebuild 실행되어 tailwind build 이후, 
-   build 실행되어 Jsrc 폴더의 모든 파일들을 JS 코드로 컴파일.
+   build 실행되어 src 폴더의 모든 파일들을 JS 코드로 컴파일.
 
 // CI=false 옵션 : Netlify에서 ts warning 등을 에러로 인식하지 않도록 하는 설정.
 
@@ -62,18 +62,22 @@ module.exports = {
 };
 
 
+cf) /build 폴더와 styles.css 파일 모두 .gitignore에 넣어도 build될 때 새로 생성되므로 문제 없음.
+
 =============================================================================
 3) _redirects : Netlify app의 라우트 설정
 - 기본적으로 /login 라우트로 접근시, login이라는 폴더를 찾도록 설정됨. (새로고침시 버그 발생)
-- public 폴더 내부에 _redirects 파일 생성. 확장자 없음.
-- 브라우저의 요청 => Netlify가 응답할 파일의 형식으로 지정.
-   /home             /
+- 해결방안: public 폴더 내부에 _redirects 파일 생성. 확장자 없음.
+- 형식: [브라우저의 요청 => Netlify가 응답할 파일]
+         /home              /
 
 [public/_redirects]  
 /* /index.html 200
 
 - 의미: /로 시작하는 모든 요청에 대해 index.html 파일로 응답. 200
-- index.html에 react application이 존재 => react router 제대로 동작. 
+- index.html에 react application이 존재 => react router 제대로 동작하게 됨. 
+
+- 버그 주의: <a> 등을 통해 외부의 다른 사이트로 이동할 수 없게 됨.
 
 =============================================================================
 4) 백엔드와 연결

@@ -12,7 +12,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
   imports: [
     TypeOrmModule.forRoot({ 
       type: 'postgres',
-      ssl: { rejectUnauthorized: false }, // Heroku 배포시 SSL 관련 에러 발생시 필요.
+      // ssl: { rejectUnauthorized: false }, // 배포시 SSL 관련 에러 발생시 추가.
       host: '172.29.32.1', // 아래 2-1 방법 참고. 
       port: 5432,
       username: 'postgres',
