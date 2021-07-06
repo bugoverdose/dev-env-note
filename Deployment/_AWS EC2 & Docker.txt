@@ -1,0 +1,52 @@
+Docker와 AWS 배포
+- https://megazonedsg.github.io/1-Make-Docker/
+- https://thefunky-monkey.com/page-364/aws-ec2-docker/
+
+// 일단 환경변수 설정은 보류. yaml에 하드코딩하기
+1) 그래들로 프로젝트를 도커 이미지화
+> gradle build                                           // 프로젝트 내부
+> gradle api:buildDocker                                 // 프로젝트 내부
+
+2) 도커 이미지/태그명 변경
+> docker tag project pfcjeong/waffle-guam-server:latest  // 로컬
+
+3) 도커 허브에 프로젝트 이미지 push
+> docker push pfcjeong/waffle-guam-server:latest         // 로컬
+
+======================================================================
+4) ec2 instance에서 도커 pull 하기
+
+4-1) 인스턴스쪽에서 로컬 IP 접속 허용 (https://docs.aws.amazon.com/ko_kr/AWSEC2/latest/UserGuide/authorizing-access-to-an-instance.html)
+
+해당 인스턴스 > 보안 > 보안 그룹 > 인바운드 규칙 편집 : SSH 유형, 내 IP를 소스로 사용하여 저장
+
+4-2) 로컬 SSH를 통해 EC2 인스턴스 접속 (저장된 .pem 파일 필요) (https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AccessingInstancesLinux.html)
+
+> chmod 400 ./waffle-guam.pem
+> sudo ssh -i "./waffle-guam.pem" ec2-user@ec2-~~~~~~~.ap-northeast-2.compute.amazonaws.com
+
+// sudo ssh -v -i "key-pair-path" ec2-user@<instance-address>    // -v 옵션으로 과정 상세 확인
+
+Are you sure you want to continue connecting (yes/no)?
+> yes
+
+// EC2 인스턴스 접속 후 docker pull하기
+> docker pull pfcjeong/waffle-guam-server
+
+// 현재 존재하는 이미지들 리스트 확인
+> docker image ls 
+
+// 현재 실행 중인 컨테이너의 Name 혹은 ID 확인 
+> docker ps
+
+// 포트에 할당된 기존 컨테이너 죽이기
+> docker kill 컨테이너명(NAME)
+
+// 이미지로 도커 컨테이너 실행하기
+> docker run -p 8080:8080 pfcjeong/waffle-guam-server:latest 
+// -p : 포트 바인딩
+// -d : 백그라운드에서 실행
+
+> exit
+
+======================================================================
