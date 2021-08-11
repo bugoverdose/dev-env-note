@@ -76,10 +76,18 @@ git push origin 브랜치명
 > git checkout <old_name_branch>
 > git branch -m <new_name_branch>
 
+==============================================================
 7) 원격 브랜치명 수정 방법
 > git checkout <old_name_branch>
 > git push origin -u <new_name_branch>        // 다른 이름으로 브랜치 복제
 > git push origin --delete <old_name_branch>  // 기존 브랜치 삭제
 
 ==============================================================
+8) 특정 브랜치에서의 작업물로 다른 브랜치 생성
 
+> git checkout old_branch       // old_branch의 커밋 내역을 그대로 지닌
+> git branch new_branch         // 새로운 브랜치 생성
+
+> git checkout -b new_branch old_branch // 한줄로 실행
+
+==============================================================

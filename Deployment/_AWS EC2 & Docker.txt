@@ -23,7 +23,7 @@ Docker와 AWS 배포
 4-2) 로컬 SSH를 통해 EC2 인스턴스 접속 (저장된 .pem 파일 필요) (https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AccessingInstancesLinux.html)
 
 > chmod 400 ./waffle-guam.pem
-> sudo ssh -i "./waffle-guam.pem" ec2-user@ec2-~~~~~~~.ap-northeast-2.compute.amazonaws.com
+> sudo ssh -i "waffle-guam.pem" ec2-user@ec2-15-164-72-46.ap-northeast-2.compute.amazonaws.com
 
 // sudo ssh -v -i "key-pair-path" ec2-user@<instance-address>    // -v 옵션으로 과정 상세 확인
 
@@ -43,10 +43,14 @@ Are you sure you want to continue connecting (yes/no)?
 > docker kill 컨테이너명(NAME)
 
 // 이미지로 도커 컨테이너 실행하기
-> docker run -p 8080:8080 pfcjeong/waffle-guam-server:latest 
+> docker run -d -p 8080:8080 pfcjeong/waffle-guam-server:latest 
 // -p : 포트 바인딩
 // -d : 백그라운드에서 실행
 
 > exit
+
+======================================================================
+5) docker logs containerId 
+- 백그라운드에서 실행 중인 프로세스 내부에서 콘솔에 출력된 로그 확인 
 
 ======================================================================

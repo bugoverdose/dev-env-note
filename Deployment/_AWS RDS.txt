@@ -1,0 +1,62 @@
+AWS RDS
+
+1) DB 인스턴스 생성
+- MySQL, MariaDB 등
+
+2) DB 인스턴스에 VPC 보안그룹 등록
+- EC2 인스턴스와 동일한 VPC 보안그룹 내부에 속해있으면 AWS 내 연동은 완료
+  => EC2 인스턴스에서 앱 구동시 DB URL, user, password로 접근 가능
+- 인바운드 규칙 등록: MYSQL/Aurora 유형. 3306 포트. 로컬 IP 주소
+  => 로컬에서 MySQL Workbench를 통해 DB 인스턴스 로그인 및 스키마 생성 등 작업 가능해짐
+
+* root 계정으로도 EC2 & 로컬에서 DB 연동 가능하지만 보안 목적으로 사용자 별도 생성.
+
+======================================================================
+3) 터미널로 DB 인스턴스에 접근하여 root 계정으로 새로운 user 생성
+- MySQL Workbench로도 작업 및 확인 가능
+- https://www.cyberciti.biz/faq/how-to-create-mysql-user-and-grant-permissions-in-aws-rds/
+
+3-1) 로컬 터미널에 MySQL Client 다운로드 (Debian/Ubuntu Linux)
+> sudo apt-get update
+> sudo apt-get install mysql-server
+
+3-2) 로컬 터미널에서 RDS 로그인
+> mysql -u {USER_NAME} -h {AWS_RDS_HOST_NAME} -P {MYSQL_PORT} -p
+// mysql -u admin -h 인스턴스명~.amazonaws.com -P 3306 -p
+
+3-3) RDS 내부에서 새로운 user 계정 생성
+> CREATE USER 'NEW_USER_NAME'@'%' IDENTIFIED BY 'PASSWORD';  
+// % : 어느 주소에서나 DB 정보 있으면 접근 가능
+// EC2 server IP address, VPC sub/net client에서만 접근하도록 설정하여 보안 강화 가능
+
+3-4) 디폴트로 부여된 권한 확인
+> SHOW GRANTS for NEW_USER_NAME;
+
+======================================================================
+4) 생성한 user에 권한 부여
+- Data USAGE privileges: SELECT, INSERT, UPDATE, DELETE, and FILE
+- Structure privileges: CREATE, ALTER, INDEX, DROP, CREATE TEMPORARY TABLES, SHOW VIEW, CREATE ROUTINE, ALTER ROUTINE, EXECUTE, CREATE VIEW, EVENT, TRIGGER
+
+권한 부여 문법
+- GRANT permission ON DB_NAME.TABLE_NAME TO 'userNameHere'@'client_ip';
+- GRANT permission1,permission2 ON DB.TABLE TO 'userNameHere'@'client_vpc_sub_net';
+
+// username에게 db_name 스키마의 모든 테이블에 대해 해당 권한 부여
+> GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER, INDEX, DROP, CREATE TEMPORARY TABLES, SHOW VIEW, CREATE ROUTINE, ALTER ROUTINE, EXECUTE, CREATE VIEW, EVENT, TRIGGER 
+  ON db_name.* TO 'username'@'%';
+
+======================================================================
+cf) EC2 인스턴스 내부 터미널에서 root 계정으로 새로운 user 생성하는 방법
+- 사전에 VPC 보안그룹에 로컬 IP 주소로 SSH 유형의 인바운드 규칙 설정 필요
+
+1) 로컬 SSH를 통해 EC2 인스턴스 접속 (저장된 .pem 파일 필요) 
+> chmod 400 ./waffle-guam.pem
+> sudo ssh -i "waffle-guam.pem" ec2-user@ec2-15-164-72-46.ap-northeast-2.compute.amazonaws.com
+
+2) EC2 인스턴스 내부에 MySQL Client 다운로드
+> sudo apt install mysql-client     // Debian/Ubuntu Linux
+
+3) EC2 인스턴스 내부에서 RDS 연동
+> mysql -u {USER_NAME} -h {AWS_RDS_HOST_NAME} -P {MYSQL_PORT} -p
+
+======================================================================
