@@ -1,0 +1,8 @@
+로컬 서버에 접속
+> mysql -u 계정명 -p
+> mysql -u root -p
+ 
+원격지에 접속 
+> mysql -h 호스트IP주소 -P 포트번호 -u 계정명 -p 디비명
+> mysql -h localhost -P 3306 -u root -p waffle_backend
+

@@ -2,16 +2,16 @@ Docker와 AWS 배포
 - https://megazonedsg.github.io/1-Make-Docker/
 - https://thefunky-monkey.com/page-364/aws-ec2-docker/
 
-// 일단 환경변수 설정은 보류. yaml에 하드코딩하기
 1) 그래들로 프로젝트를 도커 이미지화
-> gradle build                                           // 프로젝트 내부
+> gradle build -x test                                   // 프로젝트 내부
 > gradle api:buildDocker                                 // 프로젝트 내부
 
-2) 도커 이미지/태그명 변경
-> docker tag project pfcjeong/waffle-guam-server:latest  // 로컬
+1-2) 도커 이미지:태그명 변경 
+- 지금은 디폴트로 pfcjeong/waffle-guam-server:latest
+> docker tag pfcjeong/waffle-guam-server:latest pfcjeong/waffle-guam-server:backup2 // 로컬
 
 3) 도커 허브에 프로젝트 이미지 push
-> docker push pfcjeong/waffle-guam-server:latest         // 로컬
+> docker push pfcjeong/waffle-guam-server:backup2         // 로컬
 
 ======================================================================
 4) ec2 instance에서 도커 pull 하기
@@ -52,5 +52,10 @@ Are you sure you want to continue connecting (yes/no)?
 ======================================================================
 5) docker logs containerId 
 - 백그라운드에서 실행 중인 프로세스 내부에서 콘솔에 출력된 로그 확인 
+
+======================================================================
+[환경변수 주입하여 컨테이너 실행하는 방법]
+> docker run -d -p 8080:8080 --env-file="env.list" pfcjeong/waffle-guam-server:latest
+- ec2에 저장된 env.list 파일의 환경변수 키-값 쌍들 읽어들여서 실행
 
 ======================================================================

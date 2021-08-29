@@ -57,10 +57,13 @@ git checkout -b feature/~~
 git checkout master 
 
 ==============================================================
+cf) 로컬 브랜치 삭제
+git branch -d 브랜치명
+
 cf) 원격 브랜치 삭제
 git push origin --delete 브랜치명 // 방법1
 
-git branch -d 브랜치명            // 방법2. 삭제 후 origin에 반영
+git branch -d 브랜치명            // 방법2. 로컬 삭제 후 origin에 반영
 git push origin 브랜치명
 
 ==============================================================
