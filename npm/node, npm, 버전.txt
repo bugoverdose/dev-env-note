@@ -20,7 +20,7 @@ nvm : node version manager
 
 <node 버전 업데이트> 
 [nvm install 사용하려는 버전] 혹은 [nvm install --lts=사용하려는 lts버전명]
-- nvm install v14.15.3 
+- nvm install v16.13.0 
 - nvm install --lts=erbium
 
 [nvm uninstall 삭제하려는 과거 버전]

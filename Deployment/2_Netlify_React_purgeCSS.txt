@@ -6,6 +6,8 @@
 > 배포할 repository 선택
 
 > Branch to deploy : master
+
+> Base directory는 비워두기
 > Build command : npm run build 
 > Publish directory : build/
 
